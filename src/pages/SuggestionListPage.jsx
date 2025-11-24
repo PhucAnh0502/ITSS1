@@ -47,7 +47,7 @@ const SuggestionListPage = () => {
         <div className="relative mt-4 md:mt-0 w-full md:w-64">
           <input 
             type="text" 
-            placeholder="Tìm kiếm" 
+            placeholder="検索" 
             className="w-full border-b border-gray-300 py-1 px-2 focus:outline-none focus:border-indigo-500 text-sm bg-transparent"
           />
           <Search className="absolute right-2 top-1 text-gray-400" size={16} />
