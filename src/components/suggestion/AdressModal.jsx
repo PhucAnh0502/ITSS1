@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { X } from 'lucide-react';
 import { API } from '../../lib/api';
+import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router';
 
 const AddressModal = ({ isOpen, onClose, onSuccess, userId }) => {
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
+  const navigate = useNavigate();
 
   if (!isOpen) return null;
 
@@ -26,6 +29,8 @@ const AddressModal = ({ isOpen, onClose, onSuccess, userId }) => {
       setAddress("");
     } catch (err) {
       console.error("Error creating filter place:", err);
+      toast.error(err.message || "Error creating filter place");
+      navigate("/");
     }
   };
 

@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router"
 import TopBar from "./components/layout/TopBar"
 import Header from "./components/layout/Header"
 import SuggestionListPage from "./pages/SuggestionListPage"
+import { Toaster } from "react-hot-toast"
 
 function App() {
   return (
@@ -16,6 +17,8 @@ function App() {
             <Route path="/suggest" element={<SuggestionListPage />} />
           </Routes>
         </div>
+
+        <Toaster />
       </div>
     </BrowserRouter>
   )
