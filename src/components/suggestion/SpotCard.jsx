@@ -6,7 +6,7 @@ const SpotCard = ({ spot }) => {
             {/* Image Section */}
             <div className="w-full md:w-1/3 h-48 md:h-full bg-gray-400">
                 <img 
-                    src={spot.image_url || "https://tse1.mm.bing.net/th/id/OIP.9a2KzOPGDdPO-1Oloy52kgHaFE?rs=1&pid=ImgDetMain&o=7&rm=3"} 
+                    src={spot.imageUrl || "https://tse1.mm.bing.net/th/id/OIP.9a2KzOPGDdPO-1Oloy52kgHaFE?rs=1&pid=ImgDetMain&o=7&rm=3"} 
                     alt={spot.name} 
                     className="w-full h-full object-cover"
                 />
@@ -18,8 +18,13 @@ const SpotCard = ({ spot }) => {
                     <h3 className="font-bold text-lg mb-2">{spot.name}</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                         {/* Description */}
-                        <div className="text-gray-800 font-medium pr-2">
-                            {spot.address}
+                        <div>
+                            <div className="text-gray-800 font-medium pr-2">
+                                {spot.address}
+                            </div>
+                            <div className="text-gray-800 font-medium pr-2">
+                                タイプ: {spot.sports.toString(", ")}
+                            </div>
                         </div>
             
                         {/* Distance Info */}

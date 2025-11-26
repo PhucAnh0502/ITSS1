@@ -62,7 +62,10 @@ const SuggestionListPage = () => {
   const handleFilterSpots = (text) => {
     const filtered = spots.filter((spot) =>
       spot?.name.toLowerCase().includes(text.toLowerCase()) ||
-      spot?.address.toLowerCase().includes(text.toLowerCase())
+      spot?.address.toLowerCase().includes(text.toLowerCase()) ||
+      spot?.sports.some((sport) => 
+        sport.toLowerCase().includes(text.toLowerCase())
+      )
     );
     setFilteredSpots(filtered);
   }
