@@ -12,7 +12,6 @@ const SuggestionListPage = () => {
   const [filterPlaces, setFilterPlaces] = useState([]);
   const [spots, setSpots] = useState([]);
   const [filteredSpots, setFilteredSpots] = useState([]);
-  const [searchText, setSearchText] = useState("");
   const [selectedFilterPlace, setSelectedFilterPlace] = useState(null);
   const [isFetchingSpots, setIsFetchingSpots] = useState(false);
 
@@ -68,6 +67,45 @@ const SuggestionListPage = () => {
     setFilteredSpots(filtered);
   }
 
+  const renderContent = () => {
+    if (isFetchingSpots) {
+      return (
+        <div className="flex-1 flex justify-center mt-20 text-gray-500">
+          読み込み中... 
+        </div>
+      );
+    }
+
+    if (!selectedFilterPlace) {
+      return (
+        <div className="flex-1 flex justify-center mt-20 text-gray-500">
+            場所を選択してください 
+        </div>
+      );
+    }
+
+    if (filteredSpots.length === 0) {
+      return (
+        <div className="flex-1 flex justify-center mt-20 text-gray-500">
+          {spots.length === 0 
+            ? "提案がありません。" 
+            : "検索結果が見つかりません" 
+          }
+        </div>
+      );
+    }
+
+    return (
+      <div 
+        className="flex-1 overflow-y-auto pr-2 space-y-4 h-[550px]" 
+      >
+        {filteredSpots.map((spot) => (
+          <SpotCard key={spot.id} spot={spot} />
+        ))}
+      </div>
+    );
+  };
+
   return (
     <div className="container mx-auto pl-4 pr-12 py-8">
       <AddressModal
@@ -85,7 +123,6 @@ const SuggestionListPage = () => {
             placeholder="検索"
             className="w-full border-b border-gray-300 py-1 px-2 focus:outline-none focus:border-indigo-500 text-sm bg-transparent"
             onChange={(e) => {
-              setSearchText(e.target.value);
               handleFilterSpots(e.target.value);
             }}
           />
@@ -100,23 +137,7 @@ const SuggestionListPage = () => {
           selectedAddress={selectedFilterPlace}
           onSelectFilter={handleSelectFilter}
         />
-        {isFetchingSpots ? (
-          <div className="flex-1 text-center text-gray-500 mt-16 w-full">
-            読み込み中...
-          </div>
-        ) : (
-        filteredSpots.length === 0 ? (
-          <div className="text-gray-500 text-center mt-16 flex-1 w-full">
-            提案がありません。フィルターを追加してください。
-          </div>
-        ) : (
-          <div className="flex-1">
-            {filteredSpots?.map((spot) => (
-              <SpotCard key={spot.id} spot={spot} />
-            ))}
-          </div>
-        )
-        )}
+        {renderContent()}
       </div>
     </div>
   );

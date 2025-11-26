@@ -6,7 +6,7 @@ const SpotCard = ({ spot }) => {
             {/* Image Section */}
             <div className="w-full md:w-1/3 h-48 md:h-full bg-gray-400">
                 <img 
-                    src={spot.image || "https://tse1.mm.bing.net/th/id/OIP.9a2KzOPGDdPO-1Oloy52kgHaFE?rs=1&pid=ImgDetMain&o=7&rm=3"} 
+                    src={spot.image_url || "https://tse1.mm.bing.net/th/id/OIP.9a2KzOPGDdPO-1Oloy52kgHaFE?rs=1&pid=ImgDetMain&o=7&rm=3"} 
                     alt={spot.name} 
                     className="w-full h-full object-cover"
                 />

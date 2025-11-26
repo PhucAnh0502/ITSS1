@@ -22,6 +22,8 @@ const AddressModal = ({ isOpen, onClose, onSuccess, userId }) => {
 
       onClose();
       onSuccess(); 
+      setName("");
+      setAddress("");
     } catch (err) {
       console.error("Error creating filter place:", err);
     }
