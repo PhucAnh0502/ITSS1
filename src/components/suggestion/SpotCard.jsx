@@ -6,7 +6,7 @@ const SpotCard = ({ spot }) => {
             {/* Image Section */}
             <div className="w-full md:w-1/3 h-48 md:h-full bg-gray-400">
                 <img 
-                    src={spot.image} 
+                    src={spot.image_url || "https://tse1.mm.bing.net/th/id/OIP.9a2KzOPGDdPO-1Oloy52kgHaFE?rs=1&pid=ImgDetMain&o=7&rm=3"} 
                     alt={spot.name} 
                     className="w-full h-full object-cover"
                 />
@@ -19,14 +19,13 @@ const SpotCard = ({ spot }) => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                         {/* Description */}
                         <div className="text-gray-800 font-medium pr-2">
-                            {spot.sports}
+                            {spot.address}
                         </div>
             
                         {/* Distance Info */}
                         <div className="text-gray-700 space-y-1 text-xs md:text-sm">
                             <p><span className="font-bold">距離:</span></p>
-                            <p>職場から : {spot.distanceWork}</p>
-                        <p>自宅から : {spot.distanceHome}</p>
+                            <p>職場から : {(spot.distanceInMeters / 1000).toFixed(2)} km</p>
                         </div>
                     </div>
                 </div>
