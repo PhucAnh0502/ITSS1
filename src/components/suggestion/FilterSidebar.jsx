@@ -1,18 +1,27 @@
 import React from 'react';
 import { Trash2, Plus } from 'lucide-react';
 import { API } from '../../lib/api';
+import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router';
 
-const FilterSidebar = ({ filters = [], onAddClick, selectedAddress, onSelectFilter }) => {
+const FilterSidebar = ({ filters = [], onAddClick, selectedAddress, onSelectFilter, onDeleteSucess }) => {
+  const navigate = useNavigate();
+
   const handleDelete = async (filterPlaceId) => {
     const confirmDelete = window.confirm("本当に削除しますか？");
     if (confirmDelete) {
       try {
-        await fetch(`${import.meta.env.VITE_BASE_API_URL}${API.FILTER_PLACES}?filterPlaceId=${filterPlaceId}`, {
+        const res = await fetch(`${import.meta.env.VITE_BASE_API_URL}${API.FILTER_PLACES}?filterPlaceId=${filterPlaceId}`, {
           method: 'DELETE',
         });
-        window.location.reload();
+        if(res.ok) {
+          toast.success("フィルタープレイスが削除されました");
+          onDeleteSucess();
+        }
       } catch (error) {
         console.error("Error deleting filter place:", error);
+        toast.error(error.message || "error deleting filter place");
+        navigate("/");
       }
     } 
   }

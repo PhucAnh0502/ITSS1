@@ -4,6 +4,7 @@ import FilterSidebar from "../components/suggestion/FilterSidebar";
 import SpotCard from "../components/suggestion/SpotCard";
 import AddressModal from "../components/suggestion/AdressModal";
 import { API } from "../lib/api";
+import toast from "react-hot-toast";
 
 const USER_ID = "6353ad48-1b74-4cb6-c59a-08de2c394d5f";
 
@@ -26,6 +27,7 @@ const SuggestionListPage = () => {
       setFilterPlaces(data);
     } catch (err) {
       console.error("Error fetching FilterPlace:", err);
+      toast.error(err.message || "Error fetching FilterPlace");
     }
   };
 
@@ -43,6 +45,7 @@ const SuggestionListPage = () => {
       setFilteredSpots(spotData.data || []);
     } catch (error) {
       console.error(error);
+      toast.error(error.message || "Error fetching spots"); 
     } finally {
       setIsFetchingSpots(false);
     }
@@ -139,6 +142,7 @@ const SuggestionListPage = () => {
           onAddClick={() => setIsModalOpen(true)}
           selectedAddress={selectedFilterPlace}
           onSelectFilter={handleSelectFilter}
+          onDeleteSucess={fetchFilterPlace}
         />
         {renderContent()}
       </div>
