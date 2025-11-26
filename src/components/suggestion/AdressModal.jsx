@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X } from 'lucide-react';
+import { API } from '../../lib/api';
 
 const AddressModal = ({ isOpen, onClose, onSuccess, userId }) => {
   const [name, setName] = useState("");
@@ -9,7 +10,7 @@ const AddressModal = ({ isOpen, onClose, onSuccess, userId }) => {
 
   const handleSubmit = async () => {
     try {
-      await fetch("http://scic.navistar.io:3636/api/v1/FilterPlace", {
+      await fetch(`${import.meta.env.VITE_BASE_API_URL}${API.FILTER_PLACES}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

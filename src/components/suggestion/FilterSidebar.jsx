@@ -1,18 +1,21 @@
 import React from 'react';
 import { Trash2, Plus } from 'lucide-react';
 
-const FilterSidebar = ({ filters = [], onAddClick }) => {
+const FilterSidebar = ({ filters = [], onAddClick, selectedAddress, onSelectFilter }) => {
   return (
     <aside className="w-full lg:w-1/6 space-y-6 shrink-0 h-fit">
       <h2 className="font-bold text-lg text-gray-700">順番</h2>
 
       <div className="space-y-3">
         {filters.map((item, index) => (
-          <div key={item.id || index} className="flex items-center justify-between group cursor-pointer">
+          <div key={item.id || index} className="flex items-center justify-between group cursor-pointer" onClick={() => onSelectFilter(item.address)}>
             <div className="flex items-center gap-2">
               <input 
                 type="radio" 
+                name='location_filter'
                 className="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" 
+                checked={selectedAddress === item.address}
+                onChange={() => onSelectFilter(item.address)}
               />
               <span className="text-gray-600 text-sm">{item.name}</span>
             </div>
