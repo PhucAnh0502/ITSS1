@@ -1,7 +1,22 @@
 import React from 'react';
 import { Trash2, Plus } from 'lucide-react';
+import { API } from '../../lib/api';
 
 const FilterSidebar = ({ filters = [], onAddClick, selectedAddress, onSelectFilter }) => {
+  const handleDelete = async (filterPlaceId) => {
+    const confirmDelete = window.confirm("本当に削除しますか？");
+    if (confirmDelete) {
+      try {
+        await fetch(`${import.meta.env.VITE_BASE_API_URL}${API.FILTER_PLACES}?filterPlaceId=${filterPlaceId}`, {
+          method: 'DELETE',
+        });
+        window.location.reload();
+      } catch (error) {
+        console.error("Error deleting filter place:", error);
+      }
+    } 
+  }
+
   return (
     <aside className="w-full lg:w-1/6 space-y-6 shrink-0 h-fit">
       <h2 className="font-bold text-lg text-gray-700">順番</h2>
@@ -19,7 +34,7 @@ const FilterSidebar = ({ filters = [], onAddClick, selectedAddress, onSelectFilt
               />
               <span className="text-gray-600 text-sm">{item.name}</span>
             </div>
-            <Trash2 size={16} className="text-red-400 opacity-0 group-hover:opacity-100 transition cursor-pointer" />
+            <Trash2 onClick={() => handleDelete(item.id)} size={16} className="text-red-400 opacity-0 group-hover:opacity-100 transition cursor-pointer" />
           </div>
         ))}
       </div>
