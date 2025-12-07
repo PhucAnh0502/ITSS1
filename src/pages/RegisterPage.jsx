@@ -1,5 +1,7 @@
 import React, { useState } from "react"
 import { Eye, EyeOff } from "lucide-react"
+import { registerUser } from "../lib/api"
+import toast from "react-hot-toast"
 
 export default function RegisterPage() {
   const [email, setEmail] = useState("")
@@ -32,10 +34,17 @@ export default function RegisterPage() {
 
     setLoading(true)
     try {
-      // TODO: Add API call to register user
-      console.log("Register with:", { email, password })
+      const response = await registerUser(email, password)
+      toast.success("登録成功しました！")
+      // TODO: Redirect to login or home page
+      console.log("Registration successful:", response)
+      // Optional: Reset form
+      setEmail("")
+      setPassword("")
+      setConfirmPassword("")
     } catch (err) {
-      setError("登録に失敗しました。もう一度試してください")
+      setError(err.message || "登録に失敗しました。もう一度試してください")
+      toast.error(err.message || "登録に失敗しました")
     } finally {
       setLoading(false)
     }
