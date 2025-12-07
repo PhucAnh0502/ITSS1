@@ -2,51 +2,20 @@ import React, { useState } from "react"
 import { Eye, EyeOff } from "lucide-react"
 import toast from "react-hot-toast"
 import { useNavigate } from "react-router"
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api'
-
-const API = {
-    AUTH: {
-        REGISTER: '/Auth/register',
-        LOGIN: '/Auth/login',
-    }
-}
-
-// Register user
-const registerUser = async (userData) => {
-    try {
-        const response = await fetch(`${API_BASE_URL}${API.AUTH.REGISTER}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-      body: JSON.stringify(userData),
-        })
-
-        if (!response.ok) {
-            const error = await response.json()
-            throw new Error(error.message || 'Registration failed')
-        }
-
-        const data = await response.json()
-        return data
-    } catch (error) {
-        throw error
-    }
-}
+import { registerUser } from "../lib/api"
 
 export default function RegisterPage() {
   const navigate = useNavigate()
 
   const [formData, setFormData] = useState({
-    fullName: null,
-    userName: null,
+    fullName: "",
+    userName: "",
     email: "",
-    phone: null,
+    phone: "",
     password: "",
     confirmPassword: "",
-    avatarUrl: null,
-    bio: null,
+    avatarUrl: "",
+    bio: "",
   })
 
   const [showPassword, setShowPassword] = useState(false)
@@ -64,7 +33,7 @@ export default function RegisterPage() {
     setError("")
 
     // Validation (only require email and passwords)
-    const { email, password, confirmPassword } = formData
+ const { email, password, confirmPassword } = formData
 
     if (!email || !password || !confirmPassword) {
       setError("すべてのフィールドを入力してください")
@@ -89,14 +58,14 @@ export default function RegisterPage() {
       console.log("Registration successful:", response)
       // Optional: Reset form
       setFormData({
-        fullName: null,
-        userName: null,
+        fullName: "",
+        userName: "",
         email: "",
-        phone: null,
+        phone: "",
         password: "",
         confirmPassword: "",
-        avatarUrl: null,
-        bio: null,
+        avatarUrl: "",
+        bio: "",
       })
     } catch (err) {
       setError(err.message || "登録に失敗しました。もう一度試してください")
@@ -124,31 +93,6 @@ export default function RegisterPage() {
           </h2>
 
           <form onSubmit={handleRegister} className="space-y-6">
-            {/* Full Name */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">氏名</label>
-              <input
-                name="fullName"
-                type="text"
-                value={formData.fullName}
-                onChange={handleChange}
-                placeholder="山田 太郎"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-              />
-            </div>
-
-            {/* User Name */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">ユーザー名</label>
-              <input
-                name="userName"
-                type="text"
-                value={formData.userName}
-                onChange={handleChange}
-                placeholder="username123"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-              />
-            </div>
 
             {/* Email Field */}
             <div>
@@ -163,31 +107,6 @@ export default function RegisterPage() {
               />
             </div>
 
-            {/* Phone */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">電話番号</label>
-              <input
-                name="phone"
-                type="tel"
-                value={formData.phone}
-                onChange={handleChange}
-                placeholder="090-1234-5678"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-              />
-            </div>
-
-            {/* Avatar URL */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">アバターURL</label>
-              <input
-                name="avatarUrl"
-                type="url"
-                value={formData.avatarUrl}
-                onChange={handleChange}
-                placeholder="https://example.com/avatar.jpg"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-              />
-            </div>
 
             {/* Password Field */}
             <div>
@@ -233,18 +152,7 @@ export default function RegisterPage() {
               </div>
             </div>
 
-            {/* Bio */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">自己紹介</label>
-              <textarea
-                name="bio"
-                value={formData.bio}
-                onChange={handleChange}
-                placeholder="少し自己紹介を書いてください。"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                rows={3}
-              />
-            </div>
+            {/* Note: hidden fields (fullName, userName, phone, avatarUrl, bio) remain in formData but are not rendered */}
 
             {/* Error Message */}
             {error && (
