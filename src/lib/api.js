@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api'
+const API_BASE_URL = import.meta.env.VITE_BASE_API_URL || 'http://localhost:3000/api'
 
 export const API = {
     FILTER_PLACES: '/FilterPlace',
@@ -24,8 +24,15 @@ export const registerUser = async (userData) => {
         })
 
         if (!response.ok) {
-            const error = await response.json()
-            throw new Error(error.message || 'Registration failed')
+            const error = await response.text()
+
+            try {
+                errorMessage = JSON.parse(error).message || "Resgistration failed"
+            } catch {
+                errorMessage = error || "Resgistration failed"
+            }
+
+            throw new Error(errorMessage)
         }
 
         const data = await response.json()

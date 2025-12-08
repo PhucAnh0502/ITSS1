@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import { Eye, EyeOff } from "lucide-react"
 import toast from "react-hot-toast"
 import { useNavigate } from "react-router"
+import { Link } from "react-router-dom"
 import { registerUser } from "../lib/api"
 
 export default function RegisterPage() {
@@ -50,8 +51,8 @@ export default function RegisterPage() {
       return
     }
 
-    setLoading(true)
     try {
+      setLoading(true)
       const response = await registerUser(formData)
       toast.success("登録成功しました！")
       navigate('/login')
@@ -100,6 +101,7 @@ export default function RegisterPage() {
               <input
                 name="email"
                 type="email"
+                disabled={loading}
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="maihuylong@gmail.com"
@@ -116,6 +118,7 @@ export default function RegisterPage() {
                   name="password"
                   type={showPassword ? "text" : "password"}
                   value={formData.password}
+                  disabled={loading}
                   onChange={handleChange}
                   placeholder="••••••••"
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent pr-10"
@@ -138,6 +141,7 @@ export default function RegisterPage() {
                   name="confirmPassword"
                   type={showConfirmPassword ? "text" : "password"}
                   value={formData.confirmPassword}
+                  disabled={loading}
                   onChange={handleChange}
                   placeholder="••••••••"
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent pr-10"
@@ -165,7 +169,7 @@ export default function RegisterPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold py-3 rounded-lg hover:shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-linear-to-r from-blue-500 to-purple-500 text-white font-semibold py-3 rounded-lg hover:shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? "登録中..." : "新規登録"}
             </button>
@@ -174,9 +178,9 @@ export default function RegisterPage() {
           {/* Login Link */}
           <p className="text-center text-gray-600 text-sm mt-6">
             既にアカウントをお持ちですか？{" "}
-            <a href="/login" className="text-blue-500 hover:text-blue-700 font-medium">
+            <Link to="/login" className="text-blue-500 hover:text-blue-700 font-medium">
               ログイン
-            </a>
+            </Link>
           </p>
         </div>
       </div>
