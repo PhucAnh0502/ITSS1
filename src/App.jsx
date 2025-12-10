@@ -5,6 +5,7 @@ import Header from "./components/layout/Header"
 import SuggestionListPage from "./pages/SuggestionListPage"
 import RegisterPage from "./pages/RegisterPage"
 import { Toaster } from "react-hot-toast"
+import UserListPage from "./pages/UserListPage"
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Routes>
             <Route path="/suggest" element={<SuggestionListPage />} />
             <Route path="/register" element={<RegisterPage />} />
+            <Route path="/users" element={<UserListPage />} />
           </Routes>
         </div>
 
