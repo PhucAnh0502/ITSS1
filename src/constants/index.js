@@ -10,4 +10,23 @@ const contactInfo = {
     address: "Phường Bách Khoa, Hai Bà Trưng, Hà Nội"
 }
 
-export { navLinks, contactInfo };
+const activities = [
+    { label: "ジム", trans: "Gym" },
+    { label: "ヨガ", trans: "Yoga" },
+    { label: "ピラティス", trans: "Pilates" },    
+    { label: "クロスフィット", trans: "CrossFit" }, 
+    { label: "ボクシング", trans: "Boxing" },     
+    { label: "ランニング", trans: "Running" },
+    { label: "プール", trans: "Swimming" },       
+    { label: "サイクリング", trans: "Cycling" },   
+    { label: "ボルダリング", trans: "Bouldering" }, 
+    { label: "ゴルフ", trans: "Golf" },          
+    { label: "バドミントン", trans: "Badminton" },
+    { label: "テニス", trans: "Tennis" },
+    { label: "卓球", trans: "Table Tennis" },     
+    { label: "バスケ", trans: "Basketball" },     
+    { label: "サッカー", trans: "Soccer" },       
+    { label: "バレーボール", trans: "Volleyball" }
+];
+
+export { navLinks, contactInfo, activities };
