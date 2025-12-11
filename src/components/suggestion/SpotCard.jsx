@@ -1,12 +1,29 @@
-import React from 'react';
+import React, { useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { placeImages } from '../../constants';
 
 const SpotCard = ({ spot }) => {
+    const navigate = useNavigate();
+    const randomImageIndex = useMemo(() => {
+        const idStr = String(spot.osmId || 'default');
+        let hash = 0;
+        
+        for (let i = 0; i < idStr.length; i++) {
+            hash = idStr.charCodeAt(i) + ((hash << 5) - hash);
+        }
+        
+        return Math.abs(hash) % placeImages.length;
+    }, [spot.osmId]);
+
+    const handleDetailClick = () => {
+        navigate(`/list/${spot.osmId}`);
+    }
     return (
         <div className="bg-gray-300/50 p-0 flex flex-col md:flex-row h-auto md:h-48 rounded shadow-sm overflow-hidden mb-4">
             {/* Image Section */}
             <div className="w-full md:w-1/3 h-48 md:h-full bg-gray-400">
                 <img 
-                    src={spot.imageUrl || "https://tse1.mm.bing.net/th/id/OIP.9a2KzOPGDdPO-1Oloy52kgHaFE?rs=1&pid=ImgDetMain&o=7&rm=3"} 
+                    src={placeImages[randomImageIndex]} 
                     alt={spot.name} 
                     className="w-full h-full object-cover"
                 />
@@ -22,8 +39,10 @@ const SpotCard = ({ spot }) => {
                             <div className="text-gray-800 font-medium pr-2">
                                 {spot.address}
                             </div>
-                            <div className="text-gray-800 font-medium pr-2">
-                                タイプ: {spot.sports.toString(", ")}
+                            <div className="text-gray-800 font-medium pr-2 wrap-break-word mt-1">
+                                タイプ: 
+                                <br />
+                                {Array.isArray(spot.sports) ? spot.sports.join(", ") : spot.sports}
                             </div>
                         </div>
             
@@ -37,7 +56,10 @@ const SpotCard = ({ spot }) => {
 
                 {/* Action Button */}
                 <div className="flex justify-end mt-2">
-                    <button className="bg-transparent border border-gray-600 text-gray-700 px-6 py-1 rounded-full text-sm hover:bg-gray-700 hover:text-white transition">
+                    <button 
+                        className="bg-transparent border border-gray-600 text-gray-700 px-6 py-1 rounded-full text-sm hover:bg-gray-700 hover:text-white transition"
+                        onClick={handleDetailClick}
+                    >
                     詳細
                     </button>
                 </div>

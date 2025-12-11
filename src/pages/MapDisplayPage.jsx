@@ -3,6 +3,7 @@ import goongjs from "@goongmaps/goong-js";
 import "@goongmaps/goong-js/dist/goong-js.css";
 import toast from "react-hot-toast";
 import ActivityPanel from "../components/map/ActivityPanel";
+import { useNavigate } from "react-router-dom";
 
 const GOONG_MAP_KEY = import.meta.env.VITE_GOONG_MAP_KEY;
 const GOONG_API_KEY = import.meta.env.VITE_GOONG_API_KEY; 
@@ -13,6 +14,8 @@ const MapDisplayPage = () => {
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
   const markersRef = useRef([]);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (mapRef.current) return;
@@ -34,20 +37,38 @@ const MapDisplayPage = () => {
     return () => mapRef.current.remove();
   }, []);
 
-  const addMarkerToMap = useCallback((lng, lat, popupHtml) => {
+  const addMarkerToMap = useCallback((lng, lat, placeData, popupHtml) => {
       if (!mapRef.current) return;
 
       const popup = new goongjs.Popup({ offset: 25 }).setHTML(popupHtml);
 
       const marker = new goongjs.Marker({ color: "#3B82F6" })
         .setLngLat([lng, lat])
-        .setPopup(popup)
+        .setPopup(popup) 
         .addTo(mapRef.current);
+      
+      const markerElement = marker.getElement();
+      markerElement.style.cursor = 'pointer'; 
+      
+      markerElement.addEventListener('click', () => {
+          const safeType = encodeURIComponent('node'); 
+
+          const dataToSend = {
+              place_id: placeData.place_id,
+              name: placeData.name || placeData.structured_formatting.main_text,
+              address: placeData.formatted_address || placeData.structured_formatting.secondary_text,
+              sports: placeData.types
+          }
+
+          navigate(`/list/${safeType}/${placeData.place_id}`,{ 
+            state: { existingData: dataToSend } 
+          });
+      });
       
       markersRef.current.push(marker);
 
       mapRef.current.flyTo({ center: [lng, lat], zoom: 15, essential: true });
-  }, []);
+  }, [navigate]); 
 
   const handleSearch = async (text) => {
     if (!text.trim()) return;
@@ -67,7 +88,9 @@ const MapDisplayPage = () => {
 
             const { lat, lng } = dataDetail.result.geometry.location;
             const content = `<b>${dataDetail.result.name}</b><br/>${dataDetail.result.formatted_address}`;
-            addMarkerToMap(lng, lat, content);
+            
+            addMarkerToMap(lng, lat, dataDetail.result, content);
+
         } else {
             toast.error("No results found.");
         }
@@ -85,6 +108,7 @@ const MapDisplayPage = () => {
       const url = `https://rsapi.goong.io/Place/AutoComplete?api_key=${GOONG_API_KEY}&location=${center.lat},${center.lng}&input=${encodeURIComponent(label)}`;
       const res = await fetch(url);
       const data = await res.json();
+      console.log(data);
 
       if (data.predictions?.length > 0) {
         const top5 = data.predictions.slice(0, 5);
@@ -92,15 +116,14 @@ const MapDisplayPage = () => {
             const r = await fetch(`https://rsapi.goong.io/Place/Detail?api_key=${GOONG_API_KEY}&place_id=${p.place_id}`);
             return (await r.json()).result;
         }));
+        console.log("details : ", details);
 
         details.forEach(place => {
             if(!place?.geometry) return;
             const { lat, lng } = place.geometry.location;
             const content = `<b>${place.name}</b><br/>${place.formatted_address}`;
             
-            const popup = new goongjs.Popup({ offset: 25 }).setHTML(content);
-            const marker = new goongjs.Marker({ color: "#3B82F6" }).setLngLat([lng, lat]).setPopup(popup).addTo(mapRef.current);
-            markersRef.current.push(marker);
+            addMarkerToMap(lng, lat, place, content);
         });
       }
     } catch (e) { console.error(e); }
@@ -110,26 +133,19 @@ const MapDisplayPage = () => {
     <div className="max-h-screen bg-white pl-32 pr-48 py-12 font-sans">
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-gray-800">マップ</h1>
-        <div className="text-sm text-gray-500 mt-1 flex items-center gap-2">
-            <span className="font-semibold text-black">Map</span>
-            <span className="text-gray-300">|</span>
-            <span>Satellite</span>
-        </div>
+        {/* ... Header content ... */}
       </div>
 
       <div className="flex flex-col lg:flex-row gap-8 h-[600px]">
-        
         <div className="w-full lg:w-11/16 relative rounded-lg overflow-hidden border border-gray-200 shadow-sm transition-all">
           <div ref={mapContainerRef} className="w-full h-full" />
         </div>
-
         <div className="w-full lg:w-5/16 shrink-0">
             <ActivityPanel 
                 onSearch={handleSearch} 
                 onActivityClick={handleActivityClick} 
             />
         </div>
-
       </div>
     </div>
   );

@@ -37,8 +37,8 @@ const SuggestionListPage = () => {
     try {
       const res = await fetch(
         `${import.meta.env.VITE_BASE_API_URL}${
-          API.GYM.SEARCH
-        }?address=${encodeURIComponent(address)}`
+          API.GYM.SEARCH_ADVANCED
+        }?originAddress=${encodeURIComponent(address)}`
       );
       const spotData = await res.json();
       setSpots(spotData.data || []);
