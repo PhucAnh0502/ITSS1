@@ -5,6 +5,7 @@ export const API = {
     GYM: {
         SEARCH: '/Gym/search',
         SEARCH_ADVANCED: '/Gym/search-advanced',
+        PLACE_DETAIL: (id) => `/Gym/${id}`,
     },
     AUTH: {
         REGISTER: '/Auth/register',

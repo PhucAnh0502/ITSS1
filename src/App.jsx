@@ -7,6 +7,7 @@ import RegisterPage from "./pages/RegisterPage"
 import { Toaster } from "react-hot-toast"
 import UserListPage from "./pages/UserListPage"
 import MapDisplayPage from "./pages/MapDisplayPage"
+import PlaceDetail from "./pages/PlaceDetail"
 
 function App() {
   return (
@@ -17,7 +18,8 @@ function App() {
 
         <div className="flex-1 bg-gray-50">
           <Routes>
-            <Route path="/suggest" element={<SuggestionListPage />} />
+            <Route path="/list" element={<SuggestionListPage />} />
+            <Route path="/list/:type/:id" element={<PlaceDetail />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/users" element={<UserListPage />} />
             <Route path="/map" element={<MapDisplayPage />} />
