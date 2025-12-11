@@ -6,6 +6,7 @@ import SuggestionListPage from "./pages/SuggestionListPage"
 import RegisterPage from "./pages/RegisterPage"
 import { Toaster } from "react-hot-toast"
 import UserListPage from "./pages/UserListPage"
+import MapDisplayPage from "./pages/MapDisplayPage"
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
             <Route path="/suggest" element={<SuggestionListPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/users" element={<UserListPage />} />
+            <Route path="/map" element={<MapDisplayPage />} />
           </Routes>
         </div>
 
