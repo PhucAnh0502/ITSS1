@@ -203,8 +203,8 @@ const UserList = () => {
   if (loading && users.length === 0) return <div className="p-10 text-center">Loading...</div>;
 
   return (
-    <div className="p-10 bg-white min-h-screen font-sans">
-      <div className="w-full max-w-4xl mx-auto">
+    <div className="p-10 bg-white max-h-screen font-sans">
+      <div className="w-full max-w-7xl mx-auto">    
         <form> 
           <table className="w-full border-collapse mb-6">
             <thead>
