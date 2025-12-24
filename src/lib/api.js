@@ -52,6 +52,37 @@ export const registerUser = async (userData) => {
     }
 }
 
+// Login user
+export const loginUser = async (credentials) => {
+    try {
+        const response = await fetch(`${API_BASE_URL}${API.AUTH.LOGIN}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(credentials),
+        })
+
+        if (!response.ok) {
+            const error = await response.text()
+            let errorMessage = "ログインに失敗しました"
+
+            try {
+                errorMessage = JSON.parse(error).message || errorMessage
+            } catch (e) {
+                errorMessage = error || "ログインに失敗しました"
+            }
+
+            throw new Error(errorMessage)
+        }
+
+        const data = await response.json()
+        return data
+    } catch (error) {
+        throw error
+    }
+}
+
 // Resend OTP
 export const resendOtp = async (data) => {
     try {
