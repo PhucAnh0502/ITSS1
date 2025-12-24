@@ -13,6 +13,7 @@ export const API = {
         FORGOT_PASSWORD: '/auth/forgot-password',
         VERIFY_OTP: '/auth/verify-otp',
         RESET_PASSWORD: '/auth/reset-password',
+        RESEND_OTP: '/auth/resend-otp',
     },
     USERS: {
         LIST : '/User',
@@ -46,6 +47,27 @@ export const registerUser = async (userData) => {
 
         const data = await response.json()
         return data
+    } catch (error) {
+        throw error
+    }
+}
+
+// Resend OTP
+export const resendOtp = async (data) => {
+    try {
+        const response = await fetch(`${API_BASE_URL}${API.AUTH.RESEND_OTP}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+        })
+
+        if (!response.ok) {
+            const error = await response.text()
+            let errorMessage = "再送信に失敗しました"
+            try { errorMessage = JSON.parse(error).message || errorMessage } catch (e) {}
+            throw new Error(errorMessage)
+        }
+        return true
     } catch (error) {
         throw error
     }
