@@ -19,7 +19,6 @@ const MapDisplayPage = () => {
 
   const navigate = useNavigate();
 
-  // Khởi tạo bản đồ
   useEffect(() => {
     if (!mapContainerRef.current || mapRef.current) return;
 
@@ -32,7 +31,6 @@ const MapDisplayPage = () => {
 
     mapRef.current.addControl(new goongjs.NavigationControl(), "top-right");
 
-    // Marker vị trí hiện tại mặc định
     new goongjs.Marker({ color: "red" })
       .setLngLat([105.85, 21.02])
       .setPopup(new goongjs.Popup().setHTML("Vị trí của bạn"))
@@ -46,13 +44,11 @@ const MapDisplayPage = () => {
     };
   }, []);
 
-  // Hàm thêm marker địa điểm
   const addMarkerToMap = useCallback((lng, lat, placeData, popupHtml) => {
       if (!mapRef.current) return;
 
       const popup = new goongjs.Popup({ offset: 25 }).setHTML(popupHtml);
 
-      // Marker màu xanh (#3B82F6)
       const marker = new goongjs.Marker({ color: "#3B82F6" })
         .setLngLat([lng, lat])
         .setPopup(popup) 
@@ -78,7 +74,6 @@ const MapDisplayPage = () => {
       markersRef.current.push(marker);
   }, [navigate]); 
 
-  // Xử lý khi người dùng gõ tìm kiếm địa chỉ (Vẫn giữ flyTo để người dùng thấy kết quả tìm kiếm đích danh)
   const handleSearch = async (text) => {
     if (!text.trim()) return;
     try {
@@ -115,11 +110,9 @@ const MapDisplayPage = () => {
     }
   };
 
-  // Xử lý khi click vào các nút hoạt động (Sân bóng, Gym...)
   const handleActivityClick = async (label) => {
     if (!mapRef.current) return;
     
-    // Xóa marker địa điểm cũ
     markersRef.current.forEach(m => m.remove());
     markersRef.current = [];
 
@@ -146,12 +139,8 @@ const MapDisplayPage = () => {
             if(!place?.geometry) return;
             const { lat, lng } = place.geometry.location;
             const content = `<b>${place.name}</b><br/>${place.formatted_address}`;
-            // Chỉ thêm marker lên map, không gọi flyTo hay setCenter
             addMarkerToMap(lng, lat, place, content);
         });
-
-        // PHẦN ĐÃ SỬA: Đã xóa/comment đoạn code mapRef.current.flyTo ở đây
-        // Việc xóa đoạn này giúp bản đồ đứng yên khi các marker màu xanh xuất hiện.
         
       } else {
           toast.error("Không tìm thấy hoạt động nào quanh đây.");
