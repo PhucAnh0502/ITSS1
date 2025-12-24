@@ -8,6 +8,10 @@ import { Toaster } from "react-hot-toast"
 import UserListPage from "./pages/UserListPage"
 import MapDisplayPage from "./pages/MapDisplayPage"
 import PlaceDetail from "./pages/PlaceDetail"
+import ForgotPasswordPage from "./pages/ForgotPasswordPage"
+import GetOTPPage from "./pages/GetOTPPage"
+import ResetPasswordPage from "./pages/ResetPasswordPage"
+import ConfirmedChangePasswordPage from "./pages/ConfirmedChangePasswordPage"
 
 function App() {
   return (
@@ -23,6 +27,10 @@ function App() {
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/users" element={<UserListPage />} />
             <Route path="/map" element={<MapDisplayPage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="/get-otp" element={<GetOTPPage />} />
+            <Route path="/reset-password" element={<ResetPasswordPage />} />
+            <Route path="/password-changed" element={<ConfirmedChangePasswordPage />} />
           </Routes>
         </div>
 
