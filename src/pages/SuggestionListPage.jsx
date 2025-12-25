@@ -5,8 +5,7 @@ import SpotCard from "../components/suggestion/SpotCard";
 import AddressModal from "../components/suggestion/AdressModal";
 import { API } from "../lib/api";
 import toast from "react-hot-toast";
-
-const USER_ID = "6353ad48-1b74-4cb6-c59a-08de2c394d5f";
+import { getUserIdFromToken } from "../lib/utils";
 
 const SuggestionListPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -16,12 +15,14 @@ const SuggestionListPage = () => {
   const [selectedFilterPlace, setSelectedFilterPlace] = useState(null);
   const [isFetchingSpots, setIsFetchingSpots] = useState(false);
 
+  const userId = getUserIdFromToken()
+
   const fetchFilterPlace = async () => {
     try {
       const res = await fetch(
         `${import.meta.env.VITE_BASE_API_URL}${
           API.FILTER_PLACES
-        }?userId=${USER_ID}`
+        }?userId=${userId}`
       );
       const data = await res.json();
       setFilterPlaces(data);
@@ -118,7 +119,7 @@ const SuggestionListPage = () => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSuccess={fetchFilterPlace}
-        userId={USER_ID}
+        userId={userId}
       />
 
       <div className="flex flex-col md:flex-row justify-between items-end md:items-center mb-8 border-b border-gray-200 pb-4">

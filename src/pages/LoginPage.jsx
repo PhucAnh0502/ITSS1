@@ -32,11 +32,10 @@ export default function LoginPage() {
       setLoading(true)
       const response = await loginUser(formData)
       toast.success("ログイン成功しました！")
-      // Optional: store token if provided
       if (response && response.token) {
-        localStorage.setItem("authToken", response.token)
+        sessionStorage.setItem("authToken", response.token)
       }
-      navigate("/")
+      navigate("/map")
     } catch (err) {
       setError(err.message || "ログインに失敗しました。もう一度試してください")
       toast.error(err.message || "ログインに失敗しました")
