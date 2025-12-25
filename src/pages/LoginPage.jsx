@@ -34,7 +34,7 @@ export default function LoginPage() {
       toast.success("ログイン成功しました！")
       // Optional: store token if provided
       if (response && response.token) {
-        localStorage.setItem("authToken", response.token)
+        sessionStorage.setItem("authToken", response.token)
       }
       navigate("/")
     } catch (err) {
