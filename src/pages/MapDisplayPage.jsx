@@ -102,11 +102,11 @@ const MapDisplayPage = () => {
 
             mapRef.current.flyTo({ center: [lng, lat], zoom: 15, essential: true });
         } else {
-            toast.error("Không tìm thấy kết quả.");
+            toast.error("結果が見つかりませんでした。");
         }
     } catch (e) { 
         console.error(e);
-        toast.error("Lỗi khi tìm kiếm địa điểm.");
+        toast.error("場所の検索中にエラーが発生しました。");
     }
   };
 
@@ -143,7 +143,7 @@ const MapDisplayPage = () => {
         });
         
       } else {
-          toast.error("Không tìm thấy hoạt động nào quanh đây.");
+          toast.error("ここら辺にアクティビティが見つかりませんでした");
       }
     } catch (e) { 
         console.error(e); 
@@ -153,7 +153,7 @@ const MapDisplayPage = () => {
   return (
     <div className="min-h-screen bg-white px-4 md:px-20 py-12 font-sans">
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-800">Bản đồ địa điểm</h1>
+        <h1 className="text-3xl font-bold text-gray-800">マップ</h1>
       </div>
 
       <div className="flex flex-col lg:flex-row gap-8 h-[600px]">
@@ -171,4 +171,4 @@ const MapDisplayPage = () => {
   );
 };
 
-export default MapDisplayPage;
+export default MapDisplayPage;        

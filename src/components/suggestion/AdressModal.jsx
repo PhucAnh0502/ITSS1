@@ -36,11 +36,11 @@ const AddressModal = ({ isOpen, onClose, onSuccess, userId }) => {
 
   return (
     <div
-      className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 animate-fadeIn"
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-xl shadow-lg w-full max-w-sm p-6 relative"
+        className="bg-white rounded-xl shadow-lg w-full max-w-sm p-6 relative animate-scaleIn"
         onClick={(e) => e.stopPropagation()}
       >
         <button

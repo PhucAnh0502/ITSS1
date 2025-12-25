@@ -18,7 +18,9 @@ const UserList = () => {
     fullName: "",
     bio: "",
     phone: "",
-    avatarUrl: ""
+    avatarUrl: "",
+    homeAddress: "",
+    workAddress: ""
   });
 
   const fetchUsers = async (page) => {
@@ -71,7 +73,9 @@ const UserList = () => {
         fullName: user.fullName || "",
         bio: user.bio || "",
         phone: user.phone || "",
-        avatarUrl: user.avatarUrl || ""
+        avatarUrl: user.avatarUrl || "",
+        workAddress: user.workAddress || "",
+        homeAddress: user.homeAddress || ""
     });
   };
 

@@ -37,7 +37,7 @@ const Header = () => {
                 <div className="flex items-center gap-6 ">
                     
                     <NavLink 
-                        to="/"
+                        to="/settings"
                         className={({ isActive }) => 
                             `text-sm font-medium transition-colors duration-200 pr-6 ${
                             isActive 

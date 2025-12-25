@@ -14,6 +14,7 @@ export const API = {
         VERIFY_OTP: '/auth/verify-otp',
         RESET_PASSWORD: '/auth/reset-password',
         RESEND_OTP: '/auth/resend-otp',
+        CHANGE_PASSWORD: '/Auth/change-password',
     },
     USERS: {
         LIST : '/User',
