@@ -4,6 +4,7 @@ import TopBar from "./components/layout/TopBar"
 import Header from "./components/layout/Header"
 import SuggestionListPage from "./pages/SuggestionListPage"
 import RegisterPage from "./pages/RegisterPage"
+import LoginPage from "./pages/LoginPage"
 import { Toaster } from "react-hot-toast"
 import UserListPage from "./pages/UserListPage"
 import MapDisplayPage from "./pages/MapDisplayPage"
@@ -25,6 +26,7 @@ function App() {
             <Route path="/list" element={<SuggestionListPage />} />
             <Route path="/list/:type/:id" element={<PlaceDetail />} />
             <Route path="/register" element={<RegisterPage />} />
+            <Route path="/login" element={<LoginPage />} />
             <Route path="/users" element={<UserListPage />} />
             <Route path="/map" element={<MapDisplayPage />} />
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
