@@ -10,10 +10,10 @@ export const API = {
     AUTH: {
         REGISTER: '/Auth/register',
         LOGIN: '/Auth/login',
-        FORGOT_PASSWORD: '/auth/forgot-password',
         VERIFY_OTP: '/auth/verify-otp',
+        RESET_PASSWORD_MAIL: '/auth/reset-password-mail',
+        VALIDATE_TOKEN: '/auth/validate-token',
         RESET_PASSWORD: '/auth/reset-password',
-        RESEND_OTP: '/auth/resend-otp',
         CHANGE_PASSWORD: '/Auth/change-password',
     },
     USERS: {
@@ -85,30 +85,30 @@ export const loginUser = async (credentials) => {
 }
 
 // Resend OTP
-export const resendOtp = async (data) => {
-    try {
-        const response = await fetch(`${API_BASE_URL}${API.AUTH.RESEND_OTP}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data),
-        })
+// export const resendOtp = async (data) => {
+//     try {
+//         const response = await fetch(`${API_BASE_URL}${API.AUTH.RESEND_OTP}`, {
+//             method: 'POST',
+//             headers: { 'Content-Type': 'application/json' },
+//             body: JSON.stringify(data),
+//         })
 
-        if (!response.ok) {
-            const error = await response.text()
-            let errorMessage = "再送信に失敗しました"
-            try { errorMessage = JSON.parse(error).message || errorMessage } catch (e) {}
-            throw new Error(errorMessage)
-        }
-        return true
-    } catch (error) {
-        throw error
-    }
-}
+//         if (!response.ok) {
+//             const error = await response.text()
+//             let errorMessage = "再送信に失敗しました"
+//             try { errorMessage = JSON.parse(error).message || errorMessage } catch (e) {}
+//             throw new Error(errorMessage)
+//         }
+//         return true
+//     } catch (error) {
+//         throw error
+//     }
+// }
 
 // Forgot Password - Send OTP
 export const forgotPassword = async (email) => {
     try {
-        const response = await fetch(`${API_BASE_URL}${API.AUTH.FORGOT_PASSWORD}`, {
+        const response = await fetch(`${API_BASE_URL}${API.AUTH.RESET_PASSWORD_MAIL}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email }),
@@ -129,7 +129,7 @@ export const forgotPassword = async (email) => {
 // Verify OTP
 export const verifyOtp = async (data) => {
     try {
-        const response = await fetch(`${API_BASE_URL}${API.AUTH.VERIFY_OTP}`, {
+        const response = await fetch(`${API_BASE_URL}${API.AUTH.VALIDATE_TOKEN}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data),

@@ -44,8 +44,8 @@ function App() {
                 />
                 <Route path="/settings" element={<SettingPage />} />
               </Route>
+              <Route path="/" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
-              <Route path="/login" element={<LoginPage />} />
               <Route path="/forgot-password" element={<ForgotPasswordPage />} />
               <Route path="/get-otp" element={<GetOTPPage />} />
               <Route path="/reset-password" element={<ResetPasswordPage />} />

@@ -4,9 +4,11 @@ import toast from "react-hot-toast"
 import { useNavigate } from "react-router"
 import { Link } from "react-router-dom"
 import { registerUser } from "../lib/api"
+import { useLang } from "../context/LanguageContext"
 
 export default function RegisterPage() {
   const navigate = useNavigate()
+  const {t} = useLang();
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -34,30 +36,28 @@ export default function RegisterPage() {
     setError("")
 
     // Validation (only require email and passwords)
- const { email, password, confirmPassword } = formData
+    const { email, password, confirmPassword } = formData
 
     if (!email || !password || !confirmPassword) {
-      setError("すべてのフィールドを入力してください")
+      setError(t('please_fill_all_fields'))
       return
     }
 
     if (password !== confirmPassword) {
-      setError("パスワードが一致しません")
+      setError(t('password_not_match'))
       return
     }
 
     if (password.length < 6) {
-      setError("パスワードは6文字以上である必要があります")
+      setError(t('password_min_length'))
       return
     }
 
     try {
       setLoading(true)
-      const response = await registerUser(formData)
-      toast.success("登録成功しました！")
-      navigate('/login')
-      console.log("Registration successful:", response)
-      // Optional: Reset form
+      await registerUser(formData)
+      toast.success(t('register_success'))
+      navigate('/')
       setFormData({
         fullName: "",
         userName: "",
@@ -69,8 +69,8 @@ export default function RegisterPage() {
         bio: "",
       })
     } catch (err) {
-      setError(err.message || "登録に失敗しました。もう一度試してください")
-      toast.error(err.message || "登録に失敗しました")
+      setError(err.message || t('register_failed'))
+      toast.error(err.message || t('register_failed'))
     } finally {
       setLoading(false)
     }
@@ -83,21 +83,21 @@ export default function RegisterPage() {
         {/* Welcome Section */}
         <div className="mb-12 text-center">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            FreeTime Spotsプロジェクトへようこそ
+            {t('welcome')}
           </h1>
         </div>
 
         {/* Register Form Container */}
         <div className="w-full max-w-md">
           <h2 className="text-xl font-bold text-gray-900 text-center mb-8">
-            新規登録
+            {t('register')}
           </h2>
 
           <form onSubmit={handleRegister} className="space-y-6">
 
             {/* Email Field */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">メールアドレス</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">{t('email')}</label>
               <input
                 name="email"
                 type="email"
@@ -112,7 +112,7 @@ export default function RegisterPage() {
 
             {/* Password Field */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">パスワード</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">{t('password')}</label>
               <div className="relative">
                 <input
                   name="password"
@@ -135,7 +135,7 @@ export default function RegisterPage() {
 
             {/* Confirm Password Field */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">パスワードの確認</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">{t('confirm_password')}</label>
               <div className="relative">
                 <input
                   name="confirmPassword"
@@ -156,8 +156,6 @@ export default function RegisterPage() {
               </div>
             </div>
 
-            {/* Note: hidden fields (fullName, userName, phone, avatarUrl, bio) remain in formData but are not rendered */}
-
             {/* Error Message */}
             {error && (
               <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
@@ -171,15 +169,15 @@ export default function RegisterPage() {
               disabled={loading}
               className="w-full bg-linear-to-r from-blue-500 to-purple-500 text-white font-semibold py-3 rounded-lg hover:shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? "登録中..." : "新規登録"}
+              {loading ? t('sending') : t('register')}
             </button>
           </form>
 
           {/* Login Link */}
           <p className="text-center text-gray-600 text-sm mt-6">
-            既にアカウントをお持ちですか？{" "}
-            <Link to="/login" className="text-blue-500 hover:text-blue-700 font-medium">
-              ログイン
+            {t('already_have_account')}{" "}
+            <Link to="/" className="text-blue-500 hover:text-blue-700 font-medium">
+              {t('login')}
             </Link>
           </p>
         </div>

@@ -2,14 +2,16 @@ import React from 'react';
 import { NavLink, Link } from 'react-router-dom'; 
 import { navLinks } from '../../constants';
 import { logo } from '../../assets';
+import { useLang } from '../../context/LanguageContext';
 
 const Header = () => {
+    const {t} = useLang();
     return (
         <header className="border-b border-gray-200 sticky top-14 bg-white z-10 shadow-sm">
             <div className="container mr-26 ml-32 px-8 h-16 flex items-center justify-between">
                 
                 {/* Logo */}
-                <Link to="/" className="flex items-center gap-2 group">
+                <Link to="/map" className="flex items-center gap-2 group">
                     <img src={logo} alt="logo" className="w-12 h-12" />
                     <span className="text-xl font-bold text-indigo-600">FreeTime Spots</span>
                 </Link>
@@ -29,7 +31,7 @@ const Header = () => {
                                 }`
                             }
                         >
-                            {item.label}
+                            {t(item.label)}
                         </NavLink>
                     ))}
                 </nav>
@@ -46,7 +48,7 @@ const Header = () => {
                             }`
                         }
                     >
-                        マイページ
+                        {t('my_page')}
                     </NavLink>
 
                     {/* Avatar */}

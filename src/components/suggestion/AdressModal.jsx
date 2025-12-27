@@ -3,11 +3,14 @@ import { X } from 'lucide-react';
 import { API } from '../../lib/api';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router';
+import { useLang } from '../../context/LanguageContext';
 
 const AddressModal = ({ isOpen, onClose, onSuccess, userId }) => {
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const navigate = useNavigate();
+
+  const {t} = useLang();
 
   if (!isOpen) return null;
 
@@ -29,7 +32,7 @@ const AddressModal = ({ isOpen, onClose, onSuccess, userId }) => {
       setAddress("");
     } catch (err) {
       console.error("Error creating filter place:", err);
-      toast.error(err.message || "Error creating filter place");
+      toast.error(err.message || t('error_creating_filter_place'));
       navigate("/");
     }
   };
@@ -50,11 +53,11 @@ const AddressModal = ({ isOpen, onClose, onSuccess, userId }) => {
           <X size={24} />
         </button>
 
-        <h2 className="text-xl font-bold text-center text-gray-800 mb-6">住所の提案</h2>
+        <h2 className="text-xl font-bold text-center text-gray-800 mb-6">{t('address_suggestion')}</h2>
 
         <form className="space-y-4">
           <div className="space-y-1">
-            <label className="text-sm font-medium text-gray-600">場所の名前</label>
+            <label className="text-sm font-medium text-gray-600">{t('place_name')}</label>
             <input
               type="text"
               value={name}
@@ -65,7 +68,7 @@ const AddressModal = ({ isOpen, onClose, onSuccess, userId }) => {
           </div>
 
           <div className="space-y-1">
-            <label className="text-sm font-medium text-gray-600">住所</label>
+            <label className="text-sm font-medium text-gray-600">{t('address')}</label>
             <input
               type="text"
               value={address}
@@ -81,7 +84,7 @@ const AddressModal = ({ isOpen, onClose, onSuccess, userId }) => {
               onClick={handleSubmit}
               className="w-full border border-blue-500 text-blue-500 py-2 rounded-lg hover:bg-blue-50"
             >
-              提案を追加
+              {t('add_suggestion')}
             </button>
           </div>
         </form>
