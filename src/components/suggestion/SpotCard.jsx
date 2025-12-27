@@ -1,9 +1,11 @@
 import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { placeImages } from '../../constants';
+import { useLang } from '../../context/LanguageContext';
 
 const SpotCard = ({ spot }) => {
     const navigate = useNavigate();
+    const {t} = useLang();
     const randomImageIndex = useMemo(() => {
         const idStr = String(spot.osmId || 'default');
         let hash = 0;
@@ -40,7 +42,7 @@ const SpotCard = ({ spot }) => {
                                 {spot.address}
                             </div>
                             <div className="text-gray-800 font-medium pr-2 wrap-break-word mt-1">
-                                タイプ: 
+                                {t('type')}: 
                                 <br />
                                 {Array.isArray(spot.sports) ? spot.sports.join(", ") : spot.sports}
                             </div>
@@ -48,8 +50,8 @@ const SpotCard = ({ spot }) => {
             
                         {/* Distance Info */}
                         <div className="text-gray-700 space-y-1 text-xs md:text-sm">
-                            <p><span className="font-bold">距離:</span></p>
-                            <p>職場から : {(spot.distanceInMeters / 1000).toFixed(2)} km</p>
+                            <p><span className="font-bold">{t('distance')}:</span></p>
+                            <p>{t('from_work')}: {(spot.distanceInMeters / 1000).toFixed(2)} km</p>
                         </div>
                     </div>
                 </div>
@@ -60,7 +62,7 @@ const SpotCard = ({ spot }) => {
                         className="bg-transparent border border-gray-600 text-gray-700 px-6 py-1 rounded-full text-sm hover:bg-gray-700 hover:text-white transition"
                         onClick={handleDetailClick}
                     >
-                    詳細
+                    {t('view_details')}
                     </button>
                 </div>
             </div>

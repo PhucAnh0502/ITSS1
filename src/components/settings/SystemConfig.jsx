@@ -1,13 +1,15 @@
 import React, {useState} from 'react';
 import { PencilLine } from 'lucide-react';
 import ChangePasswordModal from './ChangePasswordModal';
+import { useLang } from '../../context/LanguageContext';
 
 const SystemConfig = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const {lang, setLang, t} = useLang();
 
   const handleSignout = () => {
-    sessionStorage.removeItem("token");
-    window.location.href = '/login';
+    sessionStorage.removeItem("authToken");
+    window.location.href = '/';
   }
 
   return (
@@ -15,7 +17,7 @@ const SystemConfig = () => {
       {/* Phần Bảo mật */}
       <section>
         <div className="flex justify-between items-center mb-6 border-b pb-2">
-          <h3 className="text-lg font-bold text-gray-700">セキュリティとアカウント</h3>
+          <h3 className="text-lg font-bold text-gray-700">{t('security_and_account')}</h3>
           <button 
             onClick={() => setIsModalOpen(true)}
             className="text-gray-400 hover:text-indigo-600 transition p-1"
@@ -24,7 +26,7 @@ const SystemConfig = () => {
           </button>
         </div>
         <div className="max-w-sm space-y-1">
-          <label className="block text-xs font-medium text-gray-500">パスワード</label>
+          <label className="block text-xs font-medium text-gray-500">{t('password')}</label>
           <input 
             type="password" 
             readOnly 
@@ -37,11 +39,15 @@ const SystemConfig = () => {
       {/* Phần Cài đặt chung */}
       <section>
         <div className="flex justify-between items-center mb-6 border-b pb-2">
-          <h3 className="text-lg font-bold text-gray-700">一般設定</h3>
+          <h3 className="text-lg font-bold text-gray-700">{t('general_settings')}</h3>
         </div>
         <div className="max-w-sm space-y-1">
-          <label className="block text-xs font-medium text-gray-500">言語</label>
-          <select className="w-full border border-gray-200 rounded-lg px-4 py-2.5 bg-white focus:ring-2 focus:ring-indigo-100 focus:border-indigo-400 outline-none transition cursor-pointer">
+          <label className="block text-xs font-medium text-gray-500">{t('language')}</label>
+          <select 
+            value={lang}
+            onChange={(e) => setLang(e.target.value)}
+            className="w-full border border-gray-200 rounded-lg px-4 py-2.5 bg-white focus:ring-2 focus:ring-indigo-100 focus:border-indigo-400 outline-none transition cursor-pointer"
+          >
             <option value="vi">Vietnamese</option>
             <option value="en">English</option>
             <option value="jp">日本語</option>
@@ -52,7 +58,7 @@ const SystemConfig = () => {
       {/* Nút Đăng xuất */}
       <div className="pt-6 flex justify-center">
         <button className="border border-red-300 text-red-500 px-16 py-2.5 rounded-full hover:bg-red-50 hover:border-red-400 transition-all duration-200 font-medium active:scale-95" onClick={handleSignout}>
-          サインアウト
+          {t('sign_out')}
         </button>
       </div>
 

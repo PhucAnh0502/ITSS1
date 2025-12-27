@@ -5,11 +5,13 @@ import { PencilLine, User, Loader2 } from 'lucide-react';
 import { API, API_BASE_URL } from '../lib/api';
 import toast from 'react-hot-toast';
 import { getUserIdFromToken } from '../lib/utils';
+import { useLang } from '../context/LanguageContext';
 
 const SettingPage = () => {
   const [activeTab, setActiveTab] = useState('personal');
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const {t} = useLang();
   
   const fileInputRef = useRef(null);
 
@@ -23,6 +25,7 @@ const SettingPage = () => {
         setUserData(data);
       }
     } catch (error) {
+      toast.error(t('cant_get_user_info'));
       console.error("error in fetchUserData: ", error);
     } finally {
       setLoading(false);
@@ -43,13 +46,13 @@ const SettingPage = () => {
 
       if (response.ok) {
         setUserData(updatedData);
-        toast.success("プロフィールが正常に更新されました");
+        toast.success(t('user_profile_updated_success'));
       } else {
-        toast.error("プロフィールの更新に失敗しました");
+        toast.error(t('user_profile_update_failed'));
       }
     } catch (error) {
       console.error("error in update user: ", error);
-      toast.error("サーバーエラーが発生しました");
+      toast.error(t('server_error'));
     }
   };
 
@@ -58,12 +61,12 @@ const SettingPage = () => {
     if (!file) return;
 
     if (!file.type.startsWith('image/')) {
-      toast.error("画像ファイルを選択してください");
+      toast.error(t('please_select_image'));
       return;
     }
 
     if (file.size > 5 * 1024 * 1024) {
-      toast.error("5MB以下の画像を選択してください");
+      toast.error(t('image_max_size'));
       return;
     }
 
@@ -87,7 +90,7 @@ const SettingPage = () => {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen">
         <Loader2 className="animate-spin text-indigo-600" size={40} />
-        <p className="mt-2 text-gray-500">データを読み込み中...</p>
+        <p className="mt-2 text-gray-500">{t('loading_data')}</p>
       </div>
     );
   }
@@ -121,7 +124,7 @@ const SettingPage = () => {
           </button>
         </div>
         <h2 className="mt-4 font-bold text-xl text-gray-800">{userData?.userName || "N/A"}</h2>
-        <p className="text-sm text-gray-500 mt-1">メール: {userData?.email}</p>
+        <p className="text-sm text-gray-500 mt-1">{t('email')}: {userData?.email}</p>
       </aside>
 
       {/* Main content */}
@@ -135,7 +138,7 @@ const SettingPage = () => {
                 : 'bg-gray-200 text-gray-500 hover:bg-gray-300'
             }`}
           >
-            <span>パーソナル情報</span>
+            <span>{t('personal_info')}</span>
           </button>
           <button
             onClick={() => setActiveTab('system')}
@@ -145,7 +148,7 @@ const SettingPage = () => {
                 : 'bg-gray-200 text-gray-500 hover:bg-gray-300'
             }`}
           >
-            システムコンフィグレーション
+            <span>{t('system_config')}</span>
           </button>
         </div>
 

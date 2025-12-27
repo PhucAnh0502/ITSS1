@@ -4,6 +4,7 @@ import { X } from "lucide-react";
 import { API_BASE_URL, API } from "../../lib/api";
 import toast from "react-hot-toast";
 import { getUserIdFromToken } from "../../lib/utils";
+import { useLang } from "../../context/LanguageContext";
 
 const ChangePasswordModal = ({ isOpen, onClose }) => {
   const userId = getUserIdFromToken();
@@ -13,6 +14,7 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
     confirmNewPassword: "",
   });
   const [loading, setLoading] = useState(false);
+  const {t} = useLang();
 
   if (!isOpen) return null;
 
@@ -24,7 +26,7 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
     e.preventDefault();
 
     if (formData.newPassword !== formData.confirmNewPassword) {
-      toast.error("新しいパスワードが一致しません");
+      toast.error(t('password_not_match'));
       return;
     }
 
@@ -46,15 +48,15 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
       );
 
       if (response.ok) {
-        toast.success("パスワードを正常に変更しました！");
+        toast.success(t('change_password_success'));
         setFormData({ oldPassword: "", newPassword: "", confirmNewPassword: "" });
         onClose();
       } else {
-        toast.error("パスワードの変更に失敗しました");
+        toast.error(t('change_password_failed'));
       }
     } catch (error) {
       console.error("Error:", error);
-      toast.error("サーバーエラーが発生しました");
+      toast.error(t('server_error'));
     } finally {
       setLoading(false);
     }
@@ -78,12 +80,12 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
         </button>
 
         <h2 className="text-xl font-bold text-center text-gray-800 mb-6">
-          パスワードを変更する
+          {t('change_password')}
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-1">
-            <label className="text-sm font-medium text-gray-600">パスワード</label>
+            <label className="text-sm font-medium text-gray-600">{t('password')}</label>
             <input
               type="password"
               name="oldPassword"
@@ -97,7 +99,7 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
           </div>
 
           <div className="space-y-1">
-            <label className="text-sm font-medium text-gray-600">新しいパスワード</label>
+            <label className="text-sm font-medium text-gray-600">{t('new_password')}</label>
             <input
               type="password"
               name="newPassword"
@@ -111,7 +113,7 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
           </div>
 
           <div className="space-y-1">
-            <label className="text-sm font-medium text-gray-600">新しいパスワードを確認</label>
+            <label className="text-sm font-medium text-gray-600">{t('confirm_password')}</label>
             <input
               type="password"
               name="confirmNewPassword"
@@ -130,7 +132,7 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
               disabled={loading}
               className="w-full border border-blue-500 text-blue-500 py-2 rounded-lg hover:bg-blue-50 font-bold transition-all disabled:opacity-50 active:scale-95"
             >
-              {loading ? "送信中..." : "コンファーム"}
+              {loading ? t('sending') : t('confirm')}
             </button>
           </div>
         </form>

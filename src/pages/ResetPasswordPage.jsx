@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import toast from 'react-hot-toast';
 // import { resetPassword } from "../lib/api";
 import { resetPassword } from "../lib/api-mock";
+import { useLang } from '../context/LanguageContext';
 
 const ResetPasswordPage = () => {
     const navigate = useNavigate();
@@ -15,6 +16,7 @@ const ResetPasswordPage = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [loading, setLoading] = useState(false);
+    const {t} = useLang();
 
     const [passwordStrength, setPasswordStrength] = useState({
         minLength: false,
@@ -25,7 +27,7 @@ const ResetPasswordPage = () => {
 
     useEffect(() => {
         if (!email || !otp) {
-            toast.error("セッションが無効です。最初からやり直してください");
+            toast.error(t('session_invalid'));
             navigate('/forgot-password');
         }
     }, [email, otp, navigate]);
@@ -45,18 +47,18 @@ const ResetPasswordPage = () => {
     const handleSubmit = useCallback(async (e) => {
         e.preventDefault();
 
-        if (password.length < 8) {
-            toast.error("パスワードは8文字以上である必要があります");
+        if (password.length < 6) {
+            toast.error(t('password_min_length'));
             return;
         }
 
         if (!isPasswordStrong) {
-            toast.error("パスワードは数字、文字、特殊文字を含める必要があります");
+            toast.error(t('strong_password'));
             return;
         }
 
         if (password !== confirmPassword) {
-            toast.error("パスワードが一致しません");
+            toast.error(t('password_not_match'));
             return;
         }
 
@@ -69,17 +71,17 @@ const ResetPasswordPage = () => {
                 confirmPassword
             });
 
-            toast.success("パスワードが正常にリセットされました！");
+            toast.success(t('change_password_success'));
             navigate('/password-changed');
         } catch (error) {
             if (error.response?.status === 400) {
-                toast.error("無効なOTPまたはセッションが期限切れです");
+                toast.error(t('otp_verification_failed'));
             } else if (error.response?.status === 429) {
-                toast.error("リクエストが多すぎます。しばらくお待ちください");
+                toast.error(t('too_many_requests'));
             } else if (!navigator.onLine) {
-                toast.error("インターネット接続を確認してください");
+                toast.error(t('check_internet_connection'));
             } else {
-                toast.error(error.message || "パスワードのリセットに失敗しました");
+                toast.error(error.message || t('change_password_failed'));
             }
         } finally {
             setLoading(false);
@@ -101,13 +103,9 @@ const ResetPasswordPage = () => {
                         <ArrowLeft size={24} />
                     </button>
 
-                    <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                        新しいパスワードを作成
+                    <h1 className="text-3xl font-bold text-gray-900 mb-2 text-center">
+                        {t("enter_new_password")}
                     </h1>
-
-                    <p className="text-gray-500 mb-8">
-                        安全なパスワードを設定してください。
-                    </p>
 
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div>
@@ -115,7 +113,7 @@ const ResetPasswordPage = () => {
                                 htmlFor="password"
                                 className="block text-sm font-medium text-gray-700 mb-2"
                             >
-                                新しいパスワード
+                                {t("new_password")}
                             </label>
                             <div className="relative">
                                 <input
@@ -147,19 +145,19 @@ const ResetPasswordPage = () => {
                                 <div id="password-requirements" className="mt-3 space-y-2">
                                     <PasswordRequirement
                                         met={passwordStrength.minLength}
-                                        text="8文字以上"
+                                        text={t("password_min_length")}
                                     />
                                     <PasswordRequirement
                                         met={passwordStrength.hasLetter}
-                                        text="アルファベットを含む"
+                                        text={t("include_alphabets")}
                                     />
                                     <PasswordRequirement
                                         met={passwordStrength.hasNumber}
-                                        text="数字を含む"
+                                        text={t("include_numbers")}
                                     />
                                     <PasswordRequirement
                                         met={passwordStrength.hasSpecial}
-                                        text="特殊文字を含む (!@#$%^&*)"
+                                        text={t("include_special_characters")}
                                     />
                                 </div>
                             )}
@@ -170,7 +168,7 @@ const ResetPasswordPage = () => {
                                 htmlFor="confirmPassword"
                                 className="block text-sm font-medium text-gray-700 mb-2"
                             >
-                                パスワードの確認
+                                {t("confirm_password")}
                             </label>
                             <div className="relative">
                                 <input
@@ -202,12 +200,12 @@ const ResetPasswordPage = () => {
                                     {passwordsMatch ? (
                                         <p className="text-sm text-green-600 flex items-center gap-1">
                                             <Check size={16} />
-                                            パスワードが一致します
+                                            {t("password_match")}
                                         </p>
                                     ) : (
                                         <p className="text-sm text-red-600 flex items-center gap-1">
                                             <X size={16} />
-                                            パスワードが一致しません
+                                            {t("password_not_match")}
                                         </p>
                                     )}
                                 </div>
@@ -218,19 +216,19 @@ const ResetPasswordPage = () => {
                             type="submit"
                             disabled={loading || !isPasswordStrong || !passwordsMatch}
                             className="w-full bg-linear-to-r from-blue-500 to-purple-500 text-white font-semibold py-3 rounded-lg hover:shadow-lg hover:from-blue-600 hover:to-purple-600 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
-                            aria-label={loading ? "リセット中" : "パスワードをリセット"}
+                            aria-label={loading ? t("reseting_password") : t("reset_password")}
                         >
-                            {loading ? "リセット中..." : "パスワードをリセット"}
+                            {loading ? t("reseting_password") : t("reset_password")}
                         </button>
                     </form>
 
                     <p className="text-center text-gray-600 text-sm mt-6">
-                        既にアカウントをお持ちですか？{" "}
+                        {t("remember_password")}{" "}
                         <Link
-                            to="/login"
+                            to="/"
                             className="text-blue-500 hover:text-blue-700 font-medium transition-colors focus:outline-none focus:underline"
                         >
-                            ログイン
+                            {t("login")}
                         </Link>
                     </p>
                 </div>

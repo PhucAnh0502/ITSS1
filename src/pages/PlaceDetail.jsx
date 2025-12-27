@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import toast from "react-hot-toast";
 import { API, API_BASE_URL } from "../lib/api";
 import { placeImages } from "../constants";
+import { useLang } from "../context/LanguageContext";
 
 const PlaceDetail = () => {
   const { type, id } = useParams();
@@ -12,6 +13,8 @@ const PlaceDetail = () => {
   const [spotData, setSpotData] = useState(location.state?.existingData || null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [loading, setLoading] = useState(false);
+
+  const {t} = useLang();
 
   const [randomPlaceImages] = useState(() => {
     return [...placeImages].sort(() => 0.5 - Math.random()).slice(0, 5);
@@ -33,7 +36,7 @@ const PlaceDetail = () => {
 
       if (!response.ok) {
         const error = await response.text();
-        let errorMessage = "Get place detail failed";
+        let errorMessage = t('get_place_details_error');
         try {
           errorMessage = JSON.parse(error).message || errorMessage;
         } catch {
@@ -46,7 +49,7 @@ const PlaceDetail = () => {
       setSpotData(data.data);
     } catch (error) {
       console.error("Error fetching spot detail:", error);
-      toast.error("Error loading details");
+      toast.error(t('get_place_details_error'));
     } finally {
       setLoading(false);
     }
@@ -72,11 +75,11 @@ const PlaceDetail = () => {
     );
   };
 
-  if (loading) return <div className="p-10 text-center">Loading...</div>;
+  if (loading) return <div className="p-10 text-center">{t('getting_place_details')}</div>;
 
   return (
     <div className="max-w-6xl mx-auto p-6 md:p-10 bg-white max-h-screen font-sans text-gray-800">
-      <h1 className="text-2xl font-bold mb-8 text-gray-900">場所の詳細</h1>
+      <h1 className="text-2xl font-bold mb-8 text-gray-900">{t('location_details')}</h1>
 
       <div className="flex flex-col md:flex-row gap-10">
         <div className="w-full md:w-1/2 relative group select-none">
@@ -141,15 +144,15 @@ const PlaceDetail = () => {
             {spotData?.description}
           </p>
           <div className="mb-8 font-bold text-gray-800">
-            スポーツ : {spotData?.sports?.join("、 ")}
+            {t('type')} : {spotData?.sports?.join("、 ")}
           </div>
 
           <div className="grid grid-cols-2 gap-4 border-t border-gray-100 pt-6">
             <div>
-              <h4 className="font-bold text-gray-800 mb-2">距離 :</h4>
+              <h4 className="font-bold text-gray-800 mb-2">{t('distance')} :</h4>
               <div className="text-xs text-gray-600 space-y-1">
                 <p>
-                  職場から :{" "}
+                  {t('from_work')}:{" "}
                   {spotData?.distanceInMeters
                     ? (spotData.distanceInMeters / 1000).toFixed(2)
                     : 0}{" "}
@@ -158,9 +161,9 @@ const PlaceDetail = () => {
               </div>
             </div>
             <div className="relative">
-              <h4 className="font-bold text-gray-800 mb-2">営業時間 :</h4>
+              <h4 className="font-bold text-gray-800 mb-2">{t('opening_hours')} :</h4>
               <div className="text-xs text-gray-600 space-y-1">
-                <p>{spotData?.openingHours?.days || "月曜日 - 日曜日"}</p>
+                <p>{spotData?.openingHours?.days || t('mon_to_sun')}</p>
                 <p>{spotData?.openingHours?.time || "05:00 - 22:00"}</p>
               </div>
 

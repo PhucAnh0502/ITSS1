@@ -6,6 +6,7 @@ import AddressModal from "../components/suggestion/AdressModal";
 import { API } from "../lib/api";
 import toast from "react-hot-toast";
 import { getUserIdFromToken } from "../lib/utils";
+import { useLang } from "../context/LanguageContext";
 
 const SuggestionListPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -14,6 +15,8 @@ const SuggestionListPage = () => {
   const [filteredSpots, setFilteredSpots] = useState([]);
   const [selectedFilterPlace, setSelectedFilterPlace] = useState(null);
   const [isFetchingSpots, setIsFetchingSpots] = useState(false);
+
+  const {t} = useLang();
 
   const userId = getUserIdFromToken()
 
@@ -28,7 +31,7 @@ const SuggestionListPage = () => {
       setFilterPlaces(data);
     } catch (err) {
       console.error("Error fetching FilterPlace:", err);
-      toast.error(err.message || "Error fetching FilterPlace");
+      toast.error(err.message || t("error_getting_filter_place"));
     }
   };
 
@@ -46,7 +49,7 @@ const SuggestionListPage = () => {
       setFilteredSpots(spotData.data || []);
     } catch (error) {
       console.error(error);
-      toast.error(error.message || "Error fetching spots"); 
+      toast.error(error.message || t("error_getting_suggestion_places")); 
     } finally {
       setIsFetchingSpots(false);
     }
@@ -78,7 +81,7 @@ const SuggestionListPage = () => {
     if (isFetchingSpots) {
       return (
         <div className="flex-1 flex justify-center mt-20 text-gray-500">
-          読み込み中... 
+          {t("searching_places")}
         </div>
       );
     }
@@ -86,7 +89,7 @@ const SuggestionListPage = () => {
     if (!selectedFilterPlace) {
       return (
         <div className="flex-1 flex justify-center mt-20 text-gray-500">
-            場所を選択してください 
+          {t("please_select_filter_place")} 
         </div>
       );
     }
@@ -95,8 +98,8 @@ const SuggestionListPage = () => {
       return (
         <div className="flex-1 flex justify-center mt-20 text-gray-500">
           {spots.length === 0 
-            ? "提案がありません。" 
-            : "検索結果が見つかりません" 
+            ? t("no_suggestions") 
+            : t("no_suggestions") 
           }
         </div>
       );
@@ -123,11 +126,11 @@ const SuggestionListPage = () => {
       />
 
       <div className="flex flex-col md:flex-row justify-between items-end md:items-center mb-8 border-b border-gray-200 pb-4">
-        <h1 className="text-3xl font-bold text-gray-700">提案リスト</h1>
+        <h1 className="text-3xl font-bold text-gray-700">{t('suggest_list')}</h1>
         <div className="relative mt-4 md:mt-0 w-full md:w-64">
           <input
             type="text"
-            placeholder="検索"
+            placeholder={t('search')}
             className="w-full border-b border-gray-300 py-1 px-2 focus:outline-none focus:border-indigo-500 text-sm bg-transparent"
             onChange={(e) => {
               handleFilterSpots(e.target.value);

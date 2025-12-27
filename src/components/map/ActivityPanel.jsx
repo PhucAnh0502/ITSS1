@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { MapPin } from "lucide-react";
 import { activities } from "../../constants";
+import { useLang } from "../../context/LanguageContext";
 
 const ActivityPanel = ({ onSearch, onActivityClick }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [activeActivity, setActiveActivity] = useState(null);
+  const {t} = useLang();
 
   const displayedActivities = isExpanded ? activities : activities.slice(0, 6);
 
@@ -28,7 +30,7 @@ const ActivityPanel = ({ onSearch, onActivityClick }) => {
           <MapPin className="text-red-500 w-6 h-6 mr-3 fill-current shrink-0" />
           <input 
             type="text" 
-            placeholder="どこへ行きますか？" 
+            placeholder={t('where_you_go')} 
             className="w-full outline-none text-gray-600 font-medium placeholder-blue-300 bg-transparent"
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
@@ -43,17 +45,17 @@ const ActivityPanel = ({ onSearch, onActivityClick }) => {
               onClick={() => handleActivitySelect(item)}
               className={`transition-all text-white font-bold py-4 rounded-xl shadow-md text-sm md:text-base flex justify-center items-center animate-fadeIn ${activeActivity === item.label ? 'bg-blue-700 ring-2 ring-yellow-400 scale-105' : 'bg-blue-500 hover:bg-blue-600 active:bg-blue-700'}`}
             >
-              {item.label}
+              {t(item.label)}
             </button>
           ))}
         </div>
 
         {!isExpanded && (
           <div className="flex justify-center mt-2 shrink-0">
-            <button onClick={() => setIsExpanded(true)} className="bg-blue-800 hover:bg-blue-900 text-white text-sm font-bold py-3 px-12 rounded-full shadow-lg transition-transform transform hover:scale-105">もっと見る</button>
+            <button onClick={() => setIsExpanded(true)} className="bg-blue-800 hover:bg-blue-900 text-white text-sm font-bold py-3 px-12 rounded-full shadow-lg transition-transform transform hover:scale-105">{t('more')}</button>
           </div>
         )}
-        {isExpanded && <button onClick={() => setIsExpanded(false)} className="text-gray-400 text-sm mt-2 shrink-0">閉じる</button>} 
+        {isExpanded && <button onClick={() => setIsExpanded(false)} className="text-gray-400 text-sm mt-2 shrink-0">{t('less')}</button>} 
       </div>
       
       <style>{`.custom-scrollbar::-webkit-scrollbar { width: 6px; } .custom-scrollbar::-webkit-scrollbar-track { background: transparent; } .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 20px; } @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } } .animate-fadeIn { animation: fadeIn 0.3s ease-out forwards; }`}</style>

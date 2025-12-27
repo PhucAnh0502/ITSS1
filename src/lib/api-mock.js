@@ -14,11 +14,11 @@ export const forgotPassword = async (email) => {
 
 export const verifyOtp = async (data) => {
     await delay(1000)
-    // Mock validation: assume '1234' is the correct OTP
-    if (data.otp === '1234') {
+    // Mock validation: assume '123456' is the correct OTP
+    if (data.otp === '788661') {
         return true
     }
-    throw new Error("無効なOTPです (テスト用: 1234)")
+    throw new Error("無効なOTPです (テスト用: 788661)")
 }
 
 export const resetPassword = async (data) => {
