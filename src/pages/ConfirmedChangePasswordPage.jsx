@@ -1,9 +1,11 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CheckCircle } from 'lucide-react';
+import { useLang } from '../context/LanguageContext';
 
 const ConfirmedChangePasswordPage = () => {
     const navigate = useNavigate();
+    const {t} = useLang();
 
     return (
         <div className="min-h-screen bg-white flex flex-col">
@@ -14,14 +16,14 @@ const ConfirmedChangePasswordPage = () => {
                             <CheckCircle className="w-12 h-12 text-green-600" />
                         </div>
                     </div>
-                    <h1 className="text-3xl font-bold text-gray-900 mb-2">パスワードを変更しました！</h1>
-                    <p className="text-gray-500 mb-8">パスワードが正常に変更されました。</p>
+                    <h1 className="text-3xl font-bold text-gray-900 mb-2 text-center">{t("change_password_success")}</h1>
+                    <p className="text-gray-500 mb-8 text-center">{t("change_password_process_success")}</p>
 
                     <button
                         onClick={() => navigate('/login')}
                         className="w-full bg-linear-to-r from-blue-500 to-purple-500 text-white font-semibold py-3 rounded-lg hover:shadow-lg transition-all duration-200"
                     >
-                        ログインに戻る
+                        {t("back_to_login")}
                     </button>
                 </div>
             </div>

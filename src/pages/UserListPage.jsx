@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { API_BASE_URL, API } from '../lib/api';
 import { toast } from 'react-hot-toast';
+import { useLang } from '../context/LanguageContext';
 
 const UserList = () => {
   const [users, setUsers] = useState([]);
@@ -10,6 +11,7 @@ const UserList = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [pageSize] = useState(10); 
 
+  const {t} = useLang();
 
   const [editUserId, setEditUserId] = useState(null);
   const [editFormData, setEditFormData] = useState({
@@ -35,12 +37,12 @@ const UserList = () => {
         
         if (!response.ok) {
             const error = await response.text()
-            let errorMessage = "ユーザーリストの取得に失敗しました"
+            let errorMessage = t("error_getting_user_list")
 
             try {
-                errorMessage = JSON.parse(error).message || "ユーザーリストの取得に失敗しました"
+                errorMessage = JSON.parse(error).message || t("error_getting_user_list")
             } catch {
-                errorMessage = error || "ユーザーリストの取得に失敗しました"
+                errorMessage = error || t("error_getting_user_list")
             }
 
             throw new Error(errorMessage)
@@ -54,7 +56,7 @@ const UserList = () => {
 
     } catch (err) {
         console.error("Fetch error:", err);
-        toast.error("ユーザーリストの取得に失敗しました");
+        toast.error(t("error_getting_user_list"));
     } finally {
         setLoading(false);
     }
@@ -99,12 +101,12 @@ const UserList = () => {
 
         if (!response.ok) {
             const error = await response.text()
-            let errorMessage = "ユーザーの更新に失敗しました"
+            let errorMessage = t("error_updating_user_profile")
 
             try {
-                errorMessage = JSON.parse(error).message || "ユーザーの更新に失敗しました"
+                errorMessage = JSON.parse(error).message || t("error_updating_user_profile")
             } catch {
-                errorMessage = error || "ユーザーの更新に失敗しました"
+                errorMessage = error || t("error_updating_user_profile")
             }
 
             throw new Error(errorMessage)
@@ -115,40 +117,40 @@ const UserList = () => {
         );
         setUsers(updatedUsers);
         setEditUserId(null);
-        toast.success("ユーザーの更新に成功しました");
+        toast.success(t("user_profile_updated_success"));
 
     } catch (error) {
         console.log("Update error:", error);
-        toast.error("ユーザーの更新に失敗しました");
+        toast.error(t("error_updating_user_profile"));
     }
   };
 
   const handleDeleteClick = async (userId) => {
-    if (!window.confirm("Bạn có chắc chắn muốn xóa?")) return;
+    if (!window.confirm(t("confirm_delete"))) return;
     try {
         const response = await fetch(`${API_BASE_URL}${API.USERS.USER(userId)}`, {
             method: "DELETE",
         });
         if (!response.ok) {
             const error = await response.text()
-            let errorMessage = "ユーザーの削除に失敗しました"
+            let errorMessage = t("error_deleting_user")
 
             try {
-                errorMessage = JSON.parse(error).message || "ユーザーの削除に失敗しました"
+                errorMessage = JSON.parse(error).message || t("error_deleting_user")
             } catch {
-                errorMessage = error || "ユーザーの削除に失敗しました"
+                errorMessage = error || t("error_deleting_user")
             }
 
             throw new Error(errorMessage)
         }
 
-        toast.success("ユーザーの削除に成功しました");
+        toast.success(t("delete_user_success"));
         
         fetchUsers(currentPage); 
         
     } catch (error) {
         console.log("Delete error:", error);
-        toast.error("ユーザーの削除に失敗しました");
+        toast.error(t("error_deleting_user"));
     }
   }
 
@@ -204,7 +206,7 @@ const UserList = () => {
     );
   };
 
-  if (loading && users.length === 0) return <div className="p-10 text-center">Loading...</div>;
+  if (loading && users.length === 0) return <div className="p-10 text-center">{t("getting_user_list")}</div>;
 
   return (
     <div className="p-10 bg-white max-h-screen font-sans">
@@ -213,9 +215,9 @@ const UserList = () => {
           <table className="w-full border-collapse mb-6">
             <thead>
               <tr className="border-b border-gray-100 bg-gray-50/50">
-                <th className="py-3 px-4 text-left text-xs font-bold text-gray-600 uppercase w-1/3">User Name</th>
-                <th className="py-3 px-4 text-left text-xs font-bold text-gray-600 uppercase w-1/3">Email</th>
-                <th className="py-3 px-4 text-center text-xs font-bold text-gray-600 uppercase w-1/3">Actions</th>
+                <th className="py-3 px-4 text-left text-xs font-bold text-gray-600 uppercase w-1/3">{t('username')}</th>
+                <th className="py-3 px-4 text-left text-xs font-bold text-gray-600 uppercase w-1/3">{t('email')}</th>
+                <th className="py-3 px-4 text-center text-xs font-bold text-gray-600 uppercase w-1/3">{t('actions')}</th>
               </tr>
             </thead>
             
@@ -250,13 +252,13 @@ const UserList = () => {
                     // --- VIEW MODE ---
                     <tr className="border-b border-gray-100 hover:bg-gray-50">
                       <td className="py-4 px-4 text-sm font-medium text-gray-800">
-                        {user.userName || <span className="text-gray-400 italic">No Name</span>}
+                        {user.userName || <span className="text-gray-400 italic">{t("no_name")}</span>}
                       </td>
                       <td className="py-4 px-4 text-sm text-gray-600">{user.email}</td>
                       <td className="py-4 px-4 text-center">
                         <div className="flex justify-center gap-3">
-                          <button type="button" onClick={(e) => handleEditClick(e, user)} className="bg-blue-600 hover:bg-blue-700 text-white text-xs py-1.5 px-4 rounded">Edit</button>
-                          <button type="button" onClick={() => handleDeleteClick(user.id)} className="bg-red-700 hover:bg-red-800 text-white text-xs py-1.5 px-4 rounded">Delete</button>
+                          <button type="button" onClick={(e) => handleEditClick(e, user)} className="bg-blue-600 hover:bg-blue-700 text-white text-xs py-1.5 px-4 rounded">{t('edit')}</button>
+                          <button type="button" onClick={() => handleDeleteClick(user.id)} className="bg-red-700 hover:bg-red-800 text-white text-xs py-1.5 px-4 rounded">{t('delete')}</button>
                         </div>
                       </td>
                     </tr>

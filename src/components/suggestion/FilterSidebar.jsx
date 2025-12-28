@@ -3,19 +3,21 @@ import { Trash2, Plus } from 'lucide-react';
 import { API } from '../../lib/api';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router';
+import { useLang } from '../../context/LanguageContext';
 
 const FilterSidebar = ({ filters = [], onAddClick, selectedAddress, onSelectFilter, onDeleteSucess }) => {
   const navigate = useNavigate();
+  const {t} = useLang();
 
   const handleDelete = async (filterPlaceId) => {
-    const confirmDelete = window.confirm("本当に削除しますか？");
+    const confirmDelete = window.confirm(t('confirm_delete'));
     if (confirmDelete) {
       try {
         const res = await fetch(`${import.meta.env.VITE_BASE_API_URL}${API.FILTER_PLACES}?filterPlaceId=${filterPlaceId}`, {
           method: 'DELETE',
         });
         if(res.ok) {
-          toast.success("フィルタープレイスが削除されました");
+          toast.success(t('delete_filter_place_success'));
           onDeleteSucess();
         }
       } catch (error) {
@@ -28,7 +30,7 @@ const FilterSidebar = ({ filters = [], onAddClick, selectedAddress, onSelectFilt
 
   return (
     <aside className="w-full lg:w-1/6 space-y-6 shrink-0 h-fit">
-      <h2 className="font-bold text-lg text-gray-700">順番</h2>
+      <h2 className="font-bold text-lg text-gray-700">{t('order')}</h2>
 
       <div className="space-y-3">
         {filters.map((item, index) => (

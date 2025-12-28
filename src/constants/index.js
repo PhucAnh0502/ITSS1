@@ -1,7 +1,7 @@
 const navLinks = [
-    { path: '/map', label: 'マップ' },         
-    { path: '/list', label: '提案リスト' },    
-    { path: '/settings', label: '設定' },    
+    { path: '/map', label: 'map' },         
+    { path: '/list', label: 'suggest_list' },    
+    { path: '/settings', label: 'setting' },    
 ];
 
 const contactInfo = {
@@ -85,22 +85,22 @@ const placeImages = [
 ];
 
 const activities = [
-    { label: "ジム", trans: "Gym" },
-    { label: "ヨガ", trans: "Yoga" },
-    { label: "ピラティス", trans: "Pilates" },    
-    { label: "クロスフィット", trans: "CrossFit" }, 
-    { label: "ボクシング", trans: "Boxing" },     
-    { label: "ランニング", trans: "Running" },
-    { label: "プール", trans: "Swimming" },       
-    { label: "サイクリング", trans: "Cycling" },   
-    { label: "ボルダリング", trans: "Bouldering" }, 
-    { label: "ゴルフ", trans: "Golf" },          
-    { label: "バドミントン", trans: "Badminton" },
-    { label: "テニス", trans: "Tennis" },
-    { label: "卓球", trans: "Table Tennis" },     
-    { label: "バスケ", trans: "Basketball" },     
-    { label: "サッカー", trans: "Soccer" },       
-    { label: "バレーボール", trans: "Volleyball" }
+    { label: "gym", trans: "Gym" },
+    { label: "yoga", trans: "Yoga" },
+    { label: "pilates", trans: "Pilates" },    
+    { label: "crossfit", trans: "CrossFit" }, 
+    { label: "boxing", trans: "Boxing" },     
+    { label: "running", trans: "Running" },
+    { label: "swimming", trans: "Swimming" },       
+    { label: "cycling", trans: "Cycling" },   
+    { label: "bouldering", trans: "Bouldering" }, 
+    { label: "golf", trans: "Golf" },          
+    { label: "badminton", trans: "Badminton" },
+    { label: "tennis", trans: "Tennis" },
+    { label: "table_tennis", trans: "Table Tennis" },     
+    { label: "basketball", trans: "Basketball" },     
+    { label: "soccer", trans: "Soccer" },       
+    { label: "volleyball", trans: "Volleyball" }
 ];
 
 export { navLinks, contactInfo, activities, placeImages };

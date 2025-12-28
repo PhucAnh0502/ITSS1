@@ -4,9 +4,11 @@ import toast from "react-hot-toast"
 import { useNavigate } from "react-router"
 import { Link } from "react-router-dom"
 import { loginUser } from "../lib/api"
+import { useLang } from "../context/LanguageContext"
 
 export default function LoginPage() {
   const navigate = useNavigate()
+  const {t} = useLang();
 
   const [formData, setFormData] = useState({ email: "", password: "" })
   const [showPassword, setShowPassword] = useState(false)
@@ -24,21 +26,21 @@ export default function LoginPage() {
 
     const { email, password } = formData
     if (!email || !password) {
-      setError("すべてのフィールドを入力してください")
+      setError(t('please_fill_all_fields'))
       return
     }
 
     try {
       setLoading(true)
       const response = await loginUser(formData)
-      toast.success("ログイン成功しました！")
+      toast.success(t('login_success'))
       if (response && response.token) {
         sessionStorage.setItem("authToken", response.token)
       }
       navigate("/map")
     } catch (err) {
-      setError(err.message || "ログインに失敗しました。もう一度試してください")
-      toast.error(err.message || "ログインに失敗しました")
+      setError(err.message || t('login_failed'))
+      toast.error(err.message || t('login_failed'))
     } finally {
       setLoading(false)
     }
@@ -48,15 +50,15 @@ export default function LoginPage() {
     <div className="min-h-screen bg-white flex flex-col">
       <div className="flex-1 flex flex-col items-center justify-center px-4 py-12">
         <div className="mb-12 text-center">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">FreeTime Spotsプロジェクトへようこそ</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">{t('welcome')}</h1>
         </div>
 
         <div className="w-full max-w-md">
-          <h2 className="text-xl font-bold text-gray-900 text-center mb-8">ログイン</h2>
+          <h2 className="text-xl font-bold text-gray-900 text-center mb-8">{t('login')}</h2>
 
           <form onSubmit={handleLogin} className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">メールアドレス</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">{t('email')}</label>
               <input
                 name="email"
                 type="email"
@@ -69,7 +71,7 @@ export default function LoginPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">パスワード</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">{t('password')}</label>
               <div className="relative">
                 <input
                   name="password"
@@ -91,7 +93,7 @@ export default function LoginPage() {
             </div>
 
             <div className="text-right">
-              <Link to="/forgot-password" className="text-sm text-blue-500 hover:text-blue-700">パスワードをお忘れの方?</Link>
+              <Link to="/forgot-password" className="text-sm text-blue-500 hover:text-blue-700">{t('forgot_password')}</Link>
             </div>
 
             {error && (
@@ -105,12 +107,12 @@ export default function LoginPage() {
               disabled={loading}
               className="w-full bg-linear-to-r from-blue-500 to-purple-500 text-white font-semibold py-3 rounded-lg hover:shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? "ログイン中..." : "ログイン"}
+              {loading ? t('authenticating') : t('login')}
             </button>
           </form>
 
           <p className="text-center text-gray-600 text-sm mt-6">
-            アカウントをお持ちでない方? <Link to="/register" className="text-blue-500 hover:text-blue-700 font-medium">新規登録</Link>
+            {t('don_t_have_account')} <Link to="/register" className="text-blue-500 hover:text-blue-700 font-medium">{t('register')}</Link>
           </p>
         </div>
       </div>
