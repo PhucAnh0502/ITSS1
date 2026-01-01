@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink, Link } from 'react-router-dom'; 
 import { navLinks } from '../../constants';
-import { logo } from '../../assets';
+import { default_avatar, logo } from '../../assets';
 import { useLang } from '../../context/LanguageContext';
 
 const Header = () => {
@@ -53,7 +53,7 @@ const Header = () => {
 
                     {/* Avatar */}
                     <Link to="/mypage" className="w-10 h-10 rounded-full bg-gray-300 overflow-hidden border border-gray-200 hover:ring-2 hover:ring-indigo-400 transition">
-                        <img src="avatar.png" alt="User" className="w-full h-full object-cover" />
+                        <img src={default_avatar} alt="User" className="w-full h-full object-cover" />
                     </Link>
 
                 </div>

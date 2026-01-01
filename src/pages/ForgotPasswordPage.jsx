@@ -3,8 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import toast from "react-hot-toast";
-// import { forgotPassword } from "../lib/api";
-import { forgotPassword } from "../lib/api-mock";
+import { forgotPassword } from "../lib/api";
 import { useLang } from "../context/LanguageContext";
 
 const ForgotPasswordPage = () => {
@@ -34,7 +33,7 @@ const ForgotPasswordPage = () => {
 
         setLoading(true);
         try {
-            await forgotPassword(email);
+            await forgotPassword(email, t);
             toast.success(t("otp_sent_to_email"));
             navigate("/get-otp", { state: { email } });
         } catch (error) {
@@ -52,7 +51,7 @@ const ForgotPasswordPage = () => {
         } finally {
             setLoading(false);
         }
-    }, [email, navigate]);
+    }, [email, navigate, t]);
 
     const handleEmailChange = (e) => {
         setEmail(e.target.value.trim());

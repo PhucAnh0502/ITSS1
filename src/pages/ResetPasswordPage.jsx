@@ -3,8 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { ArrowLeft, Eye, EyeOff, Check, X } from 'lucide-react';
 import { Link } from "react-router-dom";
 import toast from 'react-hot-toast';
-// import { resetPassword } from "../lib/api";
-import { resetPassword } from "../lib/api-mock";
+import { resetPassword } from "../lib/api";
 import { useLang } from '../context/LanguageContext';
 
 const ResetPasswordPage = () => {
@@ -30,7 +29,7 @@ const ResetPasswordPage = () => {
             toast.error(t('session_invalid'));
             navigate('/forgot-password');
         }
-    }, [email, otp, navigate]);
+    }, [email, otp, navigate, t]);
 
     useEffect(() => {
         setPasswordStrength({
@@ -69,7 +68,7 @@ const ResetPasswordPage = () => {
                 otp,
                 password,
                 confirmPassword
-            });
+            }, t);
 
             toast.success(t('change_password_success'));
             navigate('/password-changed');
@@ -86,7 +85,7 @@ const ResetPasswordPage = () => {
         } finally {
             setLoading(false);
         }
-    }, [email, otp, password, confirmPassword, isPasswordStrong, navigate]);
+    }, [email, otp, password, confirmPassword, isPasswordStrong, navigate, t]);
 
     if (!email || !otp) return null;
 
