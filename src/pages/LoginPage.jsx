@@ -32,7 +32,7 @@ export default function LoginPage() {
 
     try {
       setLoading(true)
-      const response = await loginUser(formData)
+      const response = await loginUser(formData, t)
       toast.success(t('login_success'))
       if (response && response.token) {
         sessionStorage.setItem("authToken", response.token)

@@ -55,7 +55,7 @@ export default function RegisterPage() {
 
     try {
       setLoading(true)
-      await registerUser(formData)
+      await registerUser(formData, t)
       toast.success(t('register_success'))
       navigate('/')
       setFormData({

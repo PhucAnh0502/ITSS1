@@ -10,10 +10,9 @@ export const API = {
     AUTH: {
         REGISTER: '/Auth/register',
         LOGIN: '/Auth/login',
-        VERIFY_OTP: '/auth/verify-otp',
-        RESET_PASSWORD_MAIL: '/auth/reset-password-mail',
-        VALIDATE_TOKEN: '/auth/validate-token',
-        RESET_PASSWORD: '/auth/reset-password',
+        RESET_PASSWORD_MAIL: '/Auth/reset-password-mail',
+        VALIDATE_TOKEN: '/Auth/validate-token',
+        RESET_PASSWORD: '/Auth/reset-password',
         CHANGE_PASSWORD: '/Auth/change-password',
     },
     USERS: {
@@ -23,7 +22,7 @@ export const API = {
 }
 
 // Register user
-export const registerUser = async (userData) => {
+export const registerUser = async (userData, t) => {
     try {
         const response = await fetch(`${API_BASE_URL}${API.AUTH.REGISTER}`, {
             method: 'POST',
@@ -35,13 +34,11 @@ export const registerUser = async (userData) => {
 
         if (!response.ok) {
             const error = await response.text()
-            let errorMessage = "Registration failed"
+            let errorMessage = t("register_failed")
 
             try {
-                errorMessage = JSON.parse(error).message || "Registration failed"
-            } catch (e) {
-                errorMessage = error || "Registration failed"
-            }
+                errorMessage = JSON.parse(error).message || t("register_failed")
+            } catch (e) {}
 
             throw new Error(errorMessage)
         }
@@ -54,7 +51,7 @@ export const registerUser = async (userData) => {
 }
 
 // Login user
-export const loginUser = async (credentials) => {
+export const loginUser = async (credentials, t) => {
     try {
         const response = await fetch(`${API_BASE_URL}${API.AUTH.LOGIN}`, {
             method: 'POST',
@@ -66,13 +63,11 @@ export const loginUser = async (credentials) => {
 
         if (!response.ok) {
             const error = await response.text()
-            let errorMessage = "ログインに失敗しました"
+            let errorMessage = t("login_failed")
 
             try {
                 errorMessage = JSON.parse(error).message || errorMessage
-            } catch (e) {
-                errorMessage = error || "ログインに失敗しました"
-            }
+            } catch (e) {}
 
             throw new Error(errorMessage)
         }
@@ -84,29 +79,8 @@ export const loginUser = async (credentials) => {
     }
 }
 
-// Resend OTP
-// export const resendOtp = async (data) => {
-//     try {
-//         const response = await fetch(`${API_BASE_URL}${API.AUTH.RESEND_OTP}`, {
-//             method: 'POST',
-//             headers: { 'Content-Type': 'application/json' },
-//             body: JSON.stringify(data),
-//         })
-
-//         if (!response.ok) {
-//             const error = await response.text()
-//             let errorMessage = "再送信に失敗しました"
-//             try { errorMessage = JSON.parse(error).message || errorMessage } catch (e) {}
-//             throw new Error(errorMessage)
-//         }
-//         return true
-//     } catch (error) {
-//         throw error
-//     }
-// }
-
 // Forgot Password - Send OTP
-export const forgotPassword = async (email) => {
+export const forgotPassword = async (email, t) => {
     try {
         const response = await fetch(`${API_BASE_URL}${API.AUTH.RESET_PASSWORD_MAIL}`, {
             method: 'POST',
@@ -116,7 +90,7 @@ export const forgotPassword = async (email) => {
 
         if (!response.ok) {
             const error = await response.text()
-            let errorMessage = "OTPの送信に失敗しました"
+            let errorMessage = t("get_otp_failed")
             try { errorMessage = JSON.parse(error).message || errorMessage } catch (e) {}
             throw new Error(errorMessage)
         }
@@ -127,17 +101,17 @@ export const forgotPassword = async (email) => {
 }
 
 // Verify OTP
-export const verifyOtp = async (data) => {
+export const verifyOtp = async (otpValue, t) => {
     try {
         const response = await fetch(`${API_BASE_URL}${API.AUTH.VALIDATE_TOKEN}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data),
+            body: JSON.stringify({ token: otpValue }),
         })
 
         if (!response.ok) {
             const error = await response.text()
-            let errorMessage = "無効なOTPです"
+            let errorMessage = t("invalid_otp")
             try { errorMessage = JSON.parse(error).message || errorMessage } catch (e) {}
             throw new Error(errorMessage)
         }
@@ -148,7 +122,7 @@ export const verifyOtp = async (data) => {
 }
 
 // Reset Password
-export const resetPassword = async (data) => {
+export const resetPassword = async (data, t) => {
     try {
         const response = await fetch(`${API_BASE_URL}${API.AUTH.RESET_PASSWORD}`, {
             method: 'POST',
@@ -158,7 +132,7 @@ export const resetPassword = async (data) => {
 
         if (!response.ok) {
             const error = await response.text()
-            let errorMessage = "パスワードのリセットに失敗しました"
+            let errorMessage = t("reset_password_failed")
             try { errorMessage = JSON.parse(error).message || errorMessage } catch (e) {}
             throw new Error(errorMessage)
         }

@@ -1,8 +1,7 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
-// import { verifyOtp, resendOtp } from "../lib/api";
-import { verifyOtp, resendOtp } from "../lib/api-mock";
+import { verifyOtp } from '../lib/api';
 import toast from "react-hot-toast";
 import { useLang } from "../context/LanguageContext";
 
@@ -12,8 +11,6 @@ const GetOTPPage = () => {
     const email = location.state?.email;
     const [otp, setOtp] = useState(['', '', '', '', '', '']);
     const [loading, setLoading] = useState(false);
-    const [resending, setResending] = useState(false);
-    const [resendTimer, setResendTimer] = useState(0);
     const inputRefs = useRef([]);
 
     const {t} = useLang();
@@ -23,14 +20,7 @@ const GetOTPPage = () => {
             toast.error(t("email_not_registered"));
             navigate('/forgot-password');
         }
-    }, [email, navigate]);
-
-    useEffect(() => {
-        if (resendTimer > 0) {
-            const timer = setTimeout(() => setResendTimer(resendTimer - 1), 1000);
-            return () => clearTimeout(timer);
-        }
-    }, [resendTimer]);
+    }, [email, navigate, t]);
 
     useEffect(() => {
         inputRefs.current[0]?.focus();
@@ -84,7 +74,7 @@ const GetOTPPage = () => {
 
         setLoading(true);
         try {
-            await verifyOtp({ email, otp: otpValue });
+            await verifyOtp({ email, otp: otpValue }, t);
 
             toast.success(t("otp_verification_success"));
             navigate('/reset-password', { state: { email, otp: otpValue } });
@@ -98,36 +88,12 @@ const GetOTPPage = () => {
             } else {
                 toast.error(error.message || t("otp_verification_failed"));
             }
-            setOtp(['', '', '', '']);
+            setOtp(['', '', '', '', '', '']);
             inputRefs.current[0]?.focus();
         } finally {
             setLoading(false);
         }
-    }, [otp, email, navigate]);
-
-    const handleResend = useCallback(async () => {
-        if (resendTimer > 0 || resending) return;
-
-        setResending(true);
-        try {
-            await resendOtp({ email });
-
-            toast.success(t("otp_sent_to_email"));
-            setResendTimer(60); // 60 seconds cooldown
-            setOtp(['', '', '', '']);
-            inputRefs.current[0]?.focus();
-        } catch (error) {
-            if (error.message.includes('rate limit')) {
-                toast.error(t("too_many_requests"));
-            } else if (!navigator.onLine) {
-                toast.error(t("check_internet_connection"));
-            } else {
-                toast.error(error.message || t("otp_verification_failed"));
-            }
-        } finally {
-            setResending(false);
-        }
-    }, [email, resendTimer, resending]);
+    }, [otp, email, navigate, t]);
 
     const isOtpComplete = otp.every(digit => digit !== '');
 
@@ -186,20 +152,6 @@ const GetOTPPage = () => {
                             {loading ? t("authenticating") : t("verify")}
                         </button>
                     </form>
-
-                    <div className="mt-6 text-center">
-                        <p className="text-gray-600 text-sm">
-                            {t("did_not_receive_code")}{" "}
-                            <button
-                                type="button"
-                                onClick={handleResend}
-                                disabled={resendTimer > 0 || resending}
-                                className="text-blue-500 font-medium hover:underline hover:text-blue-700 disabled:text-gray-400 disabled:cursor-not-allowed disabled:hover:no-underline transition-colors focus:outline-none focus:underline"
-                            >
-                                {resending ? t("sending") : resendTimer > 0 ? `再送信 (${resendTimer}秒)` : t("resend_code")}
-                            </button>
-                        </p>
-                    </div>
                 </div>
             </div>
         </div>

@@ -16,6 +16,7 @@ import ConfirmedChangePasswordPage from "./pages/ConfirmedChangePasswordPage";
 import SettingPage from "./pages/SettingPage";
 import { LanguageProvider } from "./context/LanguageContext";
 import PrivateRoutes from "./routes/PrivateRoutes";
+import NotFoundPage from "./pages/NotFoundPage";
 
 function App() {
   return (
@@ -49,6 +50,7 @@ function App() {
               <Route path="/forgot-password" element={<ForgotPasswordPage />} />
               <Route path="/get-otp" element={<GetOTPPage />} />
               <Route path="/reset-password" element={<ResetPasswordPage />} />
+              <Route path="*" element={<NotFoundPage />} />
             </Routes>
             <Toaster />
           </div>
