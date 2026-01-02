@@ -23,8 +23,10 @@ function App() {
     <LanguageProvider>
       <BrowserRouter>
         <div className="flex flex-col min-h-screen">
-          <TopBar />
-          <Header />
+          <div className="sticky top-0 z-20 shadow-sm">
+            <TopBar />
+            <Header />
+          </div>
 
           <div className="flex-1 bg-gray-50">
             <Routes>
@@ -39,10 +41,6 @@ function App() {
                 <Route path="/list/:type/:id" element={<PlaceDetail />} />
                 <Route path="/users" element={<UserListPage />} />
                 <Route path="/map" element={<MapDisplayPage />} />
-                <Route
-                  path="/password-changed"
-                  element={<ConfirmedChangePasswordPage />}
-                />
                 <Route path="/settings" element={<SettingPage />} />
               </Route>
               <Route path="/" element={<LoginPage />} />
@@ -50,6 +48,10 @@ function App() {
               <Route path="/forgot-password" element={<ForgotPasswordPage />} />
               <Route path="/get-otp" element={<GetOTPPage />} />
               <Route path="/reset-password" element={<ResetPasswordPage />} />
+              <Route
+                  path="/password-changed"
+                  element={<ConfirmedChangePasswordPage />}
+                />
               <Route path="*" element={<NotFoundPage />} />
             </Routes>
             <Toaster />

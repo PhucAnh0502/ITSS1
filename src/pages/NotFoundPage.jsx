@@ -9,8 +9,8 @@ const NotFoundPage = () => {
 
     return (
         <div className="min-h-screen bg-white flex flex-col">
-            <div className="flex-1 flex flex-col items-center justify-center px-4 py-12">
-                <div className="w-full max-w-md text-center">
+            <div className="flex-1 flex flex-col items-center justify-start md:justify-center px-4 pt-8 pb-12 md:pt-12">
+                <div className="w-full max-w-lg text-center">
                     {/* Phần số 404 với hiệu ứng màu chủ đạo */}
                     <div className="mb-8">
                         <h1 className="text-9xl font-extrabold text-transparent bg-clip-text bg-linear-to-r from-blue-500 to-purple-500">

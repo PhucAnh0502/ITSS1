@@ -9,7 +9,7 @@ const PrivateRoutes = ({children}) => {
     
     if(!token){
         toast.error(t("need_login"));
-        return <Navigate to="/login" />
+        return <Navigate to="/" />
     }
 
     return children;
