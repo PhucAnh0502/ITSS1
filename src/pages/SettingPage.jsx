@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import PersonalInfo from '../components/settings/PersonalInfo';
 import SystemConfig from '../components/settings/SystemConfig';
 import { PencilLine, User, Loader2 } from 'lucide-react';
+import ProfileSkeleton from '../components/skeletons/ProfileSkeleton';
 import { API, API_BASE_URL } from '../lib/api';
 import toast from 'react-hot-toast';
 import { getUserIdFromToken } from '../lib/utils';
@@ -17,7 +18,7 @@ const SettingPage = () => {
 
   const userId = getUserIdFromToken();
 
-  const fetchUserData = async () => {
+  const fetchUserData = useCallback(async () => {
     try {
       const response = await fetch(`${API_BASE_URL}${API.USERS.USER(userId)}`);
       if (response.ok) {
@@ -30,11 +31,11 @@ const SettingPage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [userId, t]);
 
   useEffect(() => {
     fetchUserData();
-  }, []);
+  }, [fetchUserData]);
 
   const handleUpdateUser = async (updatedData) => {
     try {
@@ -87,16 +88,11 @@ const SettingPage = () => {
   };
 
   if (loading) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-screen">
-        <Loader2 className="animate-spin text-indigo-600" size={40} />
-        <p className="mt-2 text-gray-500">{t('loading_data')}</p>
-      </div>
-    );
+    return <ProfileSkeleton />;
   }
 
   return (
-    <div className="max-w-6xl mx-auto mt-10 flex px-6 pb-20">
+    <div className="max-w-6xl mx-auto mt-6 md:mt-10 flex flex-col lg:flex-row px-4 sm:px-6 pb-16 gap-10">
       {/* Input file ẩn */}
       <input 
         type="file" 
@@ -107,7 +103,7 @@ const SettingPage = () => {
       />
 
       {/* Sidebar */}
-      <aside className="w-1/4 flex flex-col items-center text-center">
+      <aside className="w-full lg:w-1/3 flex flex-col items-center text-center">
         <div className="relative group">
           <div className="w-32 h-32 bg-gray-200 rounded-full flex items-center justify-center border-2 border-gray-100 shadow-sm overflow-hidden">
             {userData?.avatarUrl ? (
@@ -128,8 +124,8 @@ const SettingPage = () => {
       </aside>
 
       {/* Main content */}
-      <section className="w-3/4 ml-12">
-        <div className="flex space-x-1 mb-0">
+      <section className="w-full lg:w-2/3 lg:ml-12">
+        <div className="flex space-x-1 mb-0 overflow-x-auto">
           <button
             onClick={() => setActiveTab('personal')}
             className={`px-5 py-2.5 flex items-center space-x-2 rounded-t-lg transition-all duration-200 ${

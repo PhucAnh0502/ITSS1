@@ -74,7 +74,7 @@ const GetOTPPage = () => {
 
         setLoading(true);
         try {
-            await verifyOtp({ email, otp: otpValue }, t);
+            await verifyOtp(otpValue, t);
 
             toast.success(t("otp_verification_success"));
             navigate('/reset-password', { state: { email, otp: otpValue } });
@@ -101,8 +101,8 @@ const GetOTPPage = () => {
 
     return (
         <div className="min-h-screen bg-white flex flex-col">
-            <div className="flex-1 flex flex-col items-center justify-center px-4 py-12">
-                <div className="w-full max-w-md">
+                <div className="flex-1 flex flex-col items-center justify-start md:justify-center px-4 pt-6 pb-12 md:pt-12">
+                    <div className="w-full max-w-lg">
                     <button
                         onClick={() => navigate(-1)}
                         className="mb-6 text-gray-600 hover:text-gray-900 transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-lg p-1"
@@ -112,16 +112,16 @@ const GetOTPPage = () => {
                         <ArrowLeft size={24} />
                     </button>
 
-                    <h1 className="text-3xl font-bold text-gray-900 mb-2 text-center">
+                    <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3 text-center">
                         {t("check_email")}
                     </h1>
 
-                    <p className="text-gray-500 mb-8 text-center">
+                    <p className="text-gray-500 mb-10 text-center leading-relaxed text-sm md:text-base">
                         <span className="font-medium text-gray-700">{t("enter_otp_sent_to")(email)}</span>
                     </p>
 
                     <form onSubmit={handleSubmit} className="space-y-8">
-                        <div className="flex justify-between gap-3 sm:gap-4">
+                        <div className="flex flex-wrap justify-center gap-2 sm:gap-3 md:gap-4">
                             {otp.map((digit, index) => (
                                 <input
                                     key={index}
@@ -135,7 +135,7 @@ const GetOTPPage = () => {
                                     onChange={(e) => handleChange(index, e.target.value)}
                                     onKeyDown={(e) => handleKeyDown(index, e)}
                                     onPaste={handlePaste}
-                                    className="w-14 h-14 sm:w-16 sm:h-16 text-center text-2xl font-bold border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 disabled:bg-gray-100 disabled:cursor-not-allowed transition-colors"
+                                    className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 text-center text-2xl font-bold border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 disabled:bg-gray-100 disabled:cursor-not-allowed transition-colors"
                                     aria-label={`OTP桁${index + 1}`}
                                     aria-required="true"
                                     autoComplete="off"
