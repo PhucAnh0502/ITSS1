@@ -38,7 +38,7 @@ const ActivityPanel = ({ onSearch, onActivityClick }) => {
           />
         </div>
 
-        <div className={`grid grid-cols-2 gap-4 w-full transition-all duration-500 ${isExpanded ? 'overflow-y-auto flex-1 pr-2 custom-scrollbar' : 'overflow-hidden'}`}>
+        <div className={`grid grid-cols-1 sm:grid-cols-2 gap-4 w-full transition-all duration-500 ${isExpanded ? 'overflow-y-auto flex-1 pr-2 custom-scrollbar' : 'overflow-hidden'}`}>
           {displayedActivities.map((item, index) => (
             <button
               key={index}

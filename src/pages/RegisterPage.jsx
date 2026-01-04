@@ -79,7 +79,7 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen bg-white flex flex-col">
       {/* Main Container */}
-      <div className="flex-1 flex flex-col items-center justify-center px-4 py-12">
+      <div className="flex-1 flex flex-col items-center justify-start md:justify-center px-4 pt-6 pb-12 md:pt-12">
         {/* Welcome Section */}
         <div className="mb-12 text-center">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
@@ -88,7 +88,7 @@ export default function RegisterPage() {
         </div>
 
         {/* Register Form Container */}
-        <div className="w-full max-w-md">
+        <div className="w-full max-w-lg">
           <h2 className="text-xl font-bold text-gray-900 text-center mb-8">
             {t('register')}
           </h2>

@@ -40,6 +40,12 @@ const MapDisplayPage = () => {
       .addTo(mapRef.current);
       
     setSearchLocation({ lat, lng });
+    // Ensure map recalculates size after render (useful on mobile)
+    setTimeout(() => {
+      if (mapRef.current) {
+        mapRef.current.resize();
+      }
+    }, 100);
   }, []);
 
   useEffect(() => {
@@ -71,6 +77,17 @@ const MapDisplayPage = () => {
       }
     };
   }, [initMap]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (mapRef.current) {
+        mapRef.current.resize();
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const addMarkerToMap = useCallback((lng, lat, placeData, popupHtml) => {
     if (!mapRef.current) return;
@@ -179,16 +196,16 @@ const MapDisplayPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white px-4 md:px-20 py-12 font-sans">
+    <div className="min-h-screen bg-white px-4 sm:px-6 lg:px-20 py-8 md:py-12 font-sans">
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-gray-800">{t('map')}</h1>
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-8 h-[600px]">
-        <div className="w-full lg:w-3/4 relative rounded-lg overflow-hidden border border-gray-200 shadow-sm">
-          <div ref={mapContainerRef} className="w-full h-full" />
+      <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
+        <div className="w-full lg:w-2/3 xl:w-3/4 relative rounded-lg overflow-hidden border border-gray-200 shadow-sm">
+          <div ref={mapContainerRef} className="w-full h-80 sm:h-[420px] md:h-[520px] lg:h-[640px]" />
         </div>
-        <div className="w-full lg:w-1/4 shrink-0">
+        <div className="w-full lg:w-1/3 xl:w-1/4 shrink-0">
           <ActivityPanel 
             onSearch={handleSearch} 
             onActivityClick={handleActivityClick} 

@@ -29,7 +29,7 @@ const FilterSidebar = ({ filters = [], onAddClick, selectedAddress, onSelectFilt
   }
 
   return (
-    <aside className="w-full lg:w-1/6 space-y-6 shrink-0 h-fit">
+    <aside className="w-full lg:w-1/4 xl:w-1/5 space-y-6 shrink-0 h-fit bg-white p-4 rounded-xl shadow-sm border border-gray-100">
       <h2 className="font-bold text-lg text-gray-700">{t('order')}</h2>
 
       <div className="space-y-3">

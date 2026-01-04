@@ -139,6 +139,7 @@ const translations = {
         page_not_found: "Không tìm thấy trang",
         go_back: "Quay lại",
         page_not_found_message: "Trang bạn đang tìm kiếm không tồn tại hoặc có thể đã bị di chuyển hoặc xóa.",
+        loading_data: "Đang tải dữ liệu...",
     },
     en: {
         welcome: "Welcome to the FreeTime Spots project",
@@ -278,6 +279,7 @@ const translations = {
         page_not_found: "Page Not Found",
         go_back: "Go back",
         page_not_found_message: "The page you are looking for does not exist or may have been moved or deleted.",
+        loading_data: "Loading data...",
     },
     jp: {
         welcome: "FreeTime Spotsプロジェクトへようこそ",
@@ -417,6 +419,7 @@ const translations = {
         page_not_found: "ページが見つかりません",
         go_back: "戻る",
         page_not_found_message: "お探しのページは存在しないか、移動または削除された可能性があります。",
+        loading_data: "データを読み込み中...",
     }
 }
 
