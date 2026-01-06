@@ -140,6 +140,8 @@ const translations = {
         go_back: "Quay lại",
         page_not_found_message: "Trang bạn đang tìm kiếm không tồn tại hoặc có thể đã bị di chuyển hoặc xóa.",
         loading_data: "Đang tải dữ liệu...",
+        find_places: (number) => `Tìm thấy ${number} địa điểm quanh bạn`,
+        error_finding_places: "Lỗi khi tìm địa điểm",
     },
     en: {
         welcome: "Welcome to the FreeTime Spots project",
@@ -280,6 +282,8 @@ const translations = {
         go_back: "Go back",
         page_not_found_message: "The page you are looking for does not exist or may have been moved or deleted.",
         loading_data: "Loading data...",
+        find_places: (number) => `Found ${number} spots around you`,
+        error_finding_places: "Error finding places",
     },
     jp: {
         welcome: "FreeTime Spotsプロジェクトへようこそ",
@@ -420,6 +424,8 @@ const translations = {
         go_back: "戻る",
         page_not_found_message: "お探しのページは存在しないか、移動または削除された可能性があります。",
         loading_data: "データを読み込み中...",
+        find_places: (number) => `周辺に${number}件のスポットを発見しました`,
+        error_finding_places: "場所の検索エラー",
     }
 }
 

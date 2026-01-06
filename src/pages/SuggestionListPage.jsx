@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { Search } from "lucide-react";
 import FilterSidebar from "../components/suggestion/FilterSidebar";
 import SpotCard from "../components/suggestion/SpotCard";
@@ -6,8 +6,9 @@ import SuggestionSkeleton from "../components/skeletons/SuggestionSkeleton";
 import AddressModal from "../components/suggestion/AdressModal";
 import { API } from "../lib/api";
 import toast from "react-hot-toast";
-import { getUserIdFromToken } from "../lib/utils";
+import { getUserIdFromToken, createLocalSpotId } from "../lib/utils";
 import { useLang } from "../context/LanguageContext";
+import { filters as constantFilters, filteredSpots as constantFilteredSpots } from "../constants";
 
 const SuggestionListPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -16,25 +17,102 @@ const SuggestionListPage = () => {
   const [filteredSpots, setFilteredSpots] = useState([]);
   const [selectedFilterPlace, setSelectedFilterPlace] = useState(null);
   const [isFetchingSpots, setIsFetchingSpots] = useState(false);
+  const [workAdded, setWorkAdded] = useState(() => {
+    try {
+      return localStorage.getItem("workAdded") === "1";
+    } catch {
+      return false;
+    }
+  });
 
   const {t} = useLang();
 
   const userId = getUserIdFromToken()
 
+  const WORK_FILTER_ID = "3";
+  const normalizeAddress = useCallback((addr) => (addr || "").trim().toLowerCase(), []);
+
+  const baseLocalFilters = useMemo(
+    () => constantFilters
+      .filter((f) => f.id !== WORK_FILTER_ID)
+      .map((f) => ({ ...f, source: "local" })),
+    []
+  );
+
+  const workFilter = useMemo(() => {
+    const found = constantFilters.find((f) => f.id === WORK_FILTER_ID);
+    return found ? { ...found, source: "local" } : null;
+  }, []);
+
+  const buildLocalSpots = useCallback((filterId) => {
+    return constantFilteredSpots
+      .filter((spot) => String(spot.filterId) === String(filterId))
+      .map((spot) => ({
+        ...spot,
+        id: createLocalSpotId(spot.filterId, spot.name),
+        type: "local",
+      }));
+  }, []);
+
+  const mergeFilters = useCallback((apiFilters) => {
+    const byAddress = new Map();
+
+    baseLocalFilters.forEach((f) => {
+      byAddress.set(normalizeAddress(f.address), f);
+    });
+
+    const shouldShowWork = workAdded && !!workFilter;
+    if (shouldShowWork && workFilter) {
+      byAddress.set(normalizeAddress(workFilter.address), workFilter);
+    }
+
+    const filteredApi = apiFilters.filter((f) => {
+      if (!workFilter) return true;
+      const isWorkAddr = normalizeAddress(f.address) === normalizeAddress(workFilter.address);
+      return shouldShowWork ? true : !isWorkAddr;
+    });
+
+    filteredApi.forEach((f) => {
+      const key = normalizeAddress(f.address);
+      if (!byAddress.has(key)) {
+        byAddress.set(key, { ...f, source: "api" });
+      }
+    });
+
+    return Array.from(byAddress.values());
+  }, [baseLocalFilters, workFilter, workAdded, normalizeAddress]);
+
   const fetchFilterPlace = useCallback(async () => {
+    if (!userId) {
+      setFilterPlaces(mergeFilters([]));
+      return;
+    }
+
     try {
       const res = await fetch(
         `${import.meta.env.VITE_BASE_API_URL}${API.FILTER_PLACES}?userId=${userId}`
       );
       const data = await res.json();
-      setFilterPlaces(data);
+      const apiFilters = Array.isArray(data) ? data : [];
+      setFilterPlaces(mergeFilters(apiFilters));
     } catch (err) {
       console.error("Error fetching FilterPlace:", err);
       toast.error(err.message || t("error_getting_filter_place"));
+      setFilterPlaces(mergeFilters([]));
     }
-  }, [userId, t]);
+  }, [userId, t, mergeFilters]);
 
-  const fetchSpots = async (address) => {
+  const fetchSpots = async (filter) => {
+    if (!filter) return;
+
+    if (filter.source === "local") {
+      const spotsFromLocal = buildLocalSpots(filter.id);
+      setSpots(spotsFromLocal);
+      setFilteredSpots(spotsFromLocal);
+      return;
+    }
+
+    const address = filter.address;
     if (!address) return;
     setIsFetchingSpots(true);
     try {
@@ -44,8 +122,9 @@ const SuggestionListPage = () => {
         }?originAddress=${encodeURIComponent(address)}`
       );
       const spotData = await res.json();
-      setSpots(spotData.data || []);
-      setFilteredSpots(spotData.data || []);
+      const filteredData = (spotData.data || []).filter(spot => spot?.name !== "Phòng tập không tên");
+      setSpots(filteredData);
+      setFilteredSpots(filteredData);
     } catch (error) {
       console.error(error);
       toast.error(error.message || t("error_getting_suggestion_places")); 
@@ -58,19 +137,31 @@ const SuggestionListPage = () => {
     fetchFilterPlace();
   }, [fetchFilterPlace]);
 
-  const handleSelectFilter = (address) => {
-    setSelectedFilterPlace(address);
-    if(address) {
-      fetchSpots(address);
+  const handleSelectFilter = (filter) => {
+    setSelectedFilterPlace(filter);
+    if(filter) {
+      fetchSpots(filter);
     }
   };
 
+  const handleWorkAdded = useCallback(() => {
+    setWorkAdded(true);
+    try { localStorage.setItem("workAdded", "1"); } catch {}
+    fetchFilterPlace();
+  }, [fetchFilterPlace, t]);
+
+  const handleWorkDeleted = useCallback(() => {
+    setWorkAdded(false);
+    try { localStorage.removeItem("workAdded"); } catch {}
+    fetchFilterPlace();
+  }, [fetchFilterPlace]);
+
   const handleFilterSpots = (text) => {
     const filtered = spots.filter((spot) =>
-      spot?.name.toLowerCase().includes(text.toLowerCase()) ||
-      spot?.address.toLowerCase().includes(text.toLowerCase()) ||
-      spot?.sports.some((sport) => 
-        sport.toLowerCase().includes(text.toLowerCase())
+      spot?.name?.toLowerCase().includes(text.toLowerCase()) ||
+      spot?.address?.toLowerCase().includes(text.toLowerCase()) ||
+      spot?.sports?.some((sport) => 
+        sport?.toLowerCase().includes(text.toLowerCase())
       )
     );
     setFilteredSpots(filtered);
@@ -111,7 +202,7 @@ const SuggestionListPage = () => {
         className="flex-1 overflow-y-auto pr-1 sm:pr-2 space-y-4 max-h-[60vh] md:max-h-[70vh] min-h-80" 
       >
         {filteredSpots.map((spot) => (
-          <SpotCard key={spot.id} spot={spot} />
+          <SpotCard key={spot.id || spot.osmId || spot.name} spot={spot} />
         ))}
       </div>
     );
@@ -124,6 +215,7 @@ const SuggestionListPage = () => {
         onClose={() => setIsModalOpen(false)}
         onSuccess={fetchFilterPlace}
         userId={userId}
+        onWorkAdded={handleWorkAdded}
       />
 
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 md:mb-8 border-b border-gray-200 pb-4 gap-4">
@@ -145,9 +237,10 @@ const SuggestionListPage = () => {
         <FilterSidebar
           filters={filterPlaces}
           onAddClick={() => setIsModalOpen(true)}
-          selectedAddress={selectedFilterPlace}
+          selectedFilter={selectedFilterPlace}
           onSelectFilter={handleSelectFilter}
           onDeleteSucess={fetchFilterPlace}
+          onWorkDeleted={handleWorkDeleted}
         />
         {renderContent()}
       </div>

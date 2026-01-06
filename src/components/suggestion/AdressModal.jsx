@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router';
 import { useLang } from '../../context/LanguageContext';
 
-const AddressModal = ({ isOpen, onClose, onSuccess, userId }) => {
+const AddressModal = ({ isOpen, onClose, onSuccess, userId, onWorkAdded }) => {
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const navigate = useNavigate();
@@ -15,6 +15,16 @@ const AddressModal = ({ isOpen, onClose, onSuccess, userId }) => {
   if (!isOpen) return null;
 
   const handleSubmit = async () => {
+    const isWorkKeyword = name === "Work";
+    
+    if (isWorkKeyword) {
+      onClose();
+      onWorkAdded && onWorkAdded();
+      setName("");
+      setAddress("");
+      return;
+    }
+
     try {
       await fetch(`${import.meta.env.VITE_BASE_API_URL}${API.FILTER_PLACES}`, {
         method: "POST",

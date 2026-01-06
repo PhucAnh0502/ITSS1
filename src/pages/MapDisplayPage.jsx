@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import ActivityPanel from "../components/map/ActivityPanel";
 import { useNavigate } from "react-router-dom";
 import { useLang } from "../context/LanguageContext";
+import { calculateDistance } from "../lib/utils";
 
 const GOONG_MAP_KEY = import.meta.env.VITE_GOONG_MAP_KEY;
 const GOONG_API_KEY = import.meta.env.VITE_GOONG_API_KEY; 
@@ -40,7 +41,6 @@ const MapDisplayPage = () => {
       .addTo(mapRef.current);
       
     setSearchLocation({ lat, lng });
-    // Ensure map recalculates size after render (useful on mobile)
     setTimeout(() => {
       if (mapRef.current) {
         mapRef.current.resize();
@@ -161,37 +161,89 @@ const MapDisplayPage = () => {
     markersRef.current.forEach(m => m.remove());
     markersRef.current = [];
 
-    const location = searchLocation || { 
-      lat: mapRef.current.getCenter().lat, 
-      lng: mapRef.current.getCenter().lng 
-    };
+    // Ưu tiên vị trí tìm kiếm (marker vàng) nếu có, không thì dùng vị trí hiện tại (marker đỏ)
+    const referenceLocation = searchMarkerRef.current 
+      ? { lat: searchMarkerRef.current.getLngLat().lat, lng: searchMarkerRef.current.getLngLat().lng }
+      : (userMarkerRef.current 
+          ? { lat: userMarkerRef.current.getLngLat().lat, lng: userMarkerRef.current.getLngLat().lng }
+          : { lat: mapRef.current.getCenter().lat, lng: mapRef.current.getCenter().lng });
 
     try {
-      const url = `https://rsapi.goong.io/Place/AutoComplete?api_key=${GOONG_API_KEY}&location=${location.lat},${location.lng}&input=${encodeURIComponent(label)}`;
-      const res = await fetch(url);
-      const data = await res.json();
+      const queries = [
+        label,
+        `${label} gần đây`,
+        `${label} nearby`,
+        `sân ${label}`,
+        `khu ${label}`,
+      ];
 
-      if (data.predictions?.length > 0) {
-        const top5 = data.predictions.slice(0, 5);
-        
-        const details = await Promise.all(top5.map(async p => {
-          const r = await fetch(`https://rsapi.goong.io/Place/Detail?api_key=${GOONG_API_KEY}&place_id=${p.place_id}`);
-          const detailData = await r.json();
-          return detailData.result;
-        }));
+      const allPlaces = new Map(); 
 
-        details.forEach(place => {
-          if (!place?.geometry) return;
-          const { lat, lng } = place.geometry.location;
-          const content = `<b>${place.name}</b><br/>${place.formatted_address}`;
-          addMarkerToMap(lng, lat, place, content);
-        });
-        
+      await Promise.all(
+        queries.map(async (query) => {
+          try {
+            const url = `https://rsapi.goong.io/Place/AutoComplete?api_key=${GOONG_API_KEY}&location=${referenceLocation.lat},${referenceLocation.lng}&input=${encodeURIComponent(query)}&radius=15000`;
+            const res = await fetch(url);
+            const data = await res.json();
+
+            if (data.predictions?.length > 0) {
+              const details = await Promise.all(
+                data.predictions.map(async p => {
+                  try {
+                    const r = await fetch(`https://rsapi.goong.io/Place/Detail?api_key=${GOONG_API_KEY}&place_id=${p.place_id}`);
+                    const detailData = await r.json();
+                    return detailData.result;
+                  } catch (e) {
+                    return null;
+                  }
+                })
+              );
+
+              details.forEach(place => {
+                if (place && place.geometry?.location && !allPlaces.has(place.place_id)) {
+                  allPlaces.set(place.place_id, place);
+                }
+              });
+            }
+          } catch (e) {
+            console.error(`Error searching with query "${query}":`, e);
+          }
+        })
+      );
+
+      const placesArray = Array.from(allPlaces.values());
+
+      if (placesArray.length > 0) {
+        const placesWithDistance = placesArray
+          .map(place => {
+            const { lat, lng } = place.geometry.location;
+            const distance = calculateDistance(referenceLocation.lat, referenceLocation.lng, lat, lng);
+            return { place, distance };
+          })
+          .filter(item => item.distance <= 20);
+
+        // Sắp xếp theo khoảng cách
+        placesWithDistance.sort((a, b) => a.distance - b.distance);
+
+        // Lấy tối đa 20 địa điểm gần nhất
+        const nearbyPlaces = placesWithDistance.slice(0, 20);
+
+        if (nearbyPlaces.length > 0) {
+          nearbyPlaces.forEach(({ place, distance }) => {
+            const { lat, lng } = place.geometry.location;
+            const content = `<b>${place.name}</b><br/>${place.formatted_address}<br/><small>${distance.toFixed(2)} km</small>`;
+            addMarkerToMap(lng, lat, place, content);
+          });
+          toast.success(t('find_places')(nearbyPlaces.length));
+        } else {
+          toast.error(t('cant_find_activity')(label));
+        }
       } else {
         toast.error(t('cant_find_activity')(label));
       }
     } catch (e) { 
-      console.error(e); 
+      console.error(e);
+      toast.error('Có lỗi khi tìm kiếm địa điểm'); 
     }
   };
 
