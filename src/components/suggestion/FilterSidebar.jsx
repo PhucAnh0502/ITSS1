@@ -5,27 +5,48 @@ import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router';
 import { useLang } from '../../context/LanguageContext';
 
-const FilterSidebar = ({ filters = [], onAddClick, selectedAddress, onSelectFilter, onDeleteSucess }) => {
+const FilterSidebar = ({ filters = [], onAddClick, selectedFilter, onSelectFilter, onDeleteSucess, onWorkDeleted }) => {
   const navigate = useNavigate();
   const {t} = useLang();
 
-  const handleDelete = async (filterPlaceId) => {
+  const WORK_ADDRESS = "số 1 Đại Cồ Việt, Hai Bà Trưng, Hà Nội";
+  const normalizeAddress = (addr) => (addr || "").trim().toLowerCase();
+
+  const handleDelete = async (filter) => {
     const confirmDelete = window.confirm(t('confirm_delete'));
-    if (confirmDelete) {
-      try {
-        const res = await fetch(`${import.meta.env.VITE_BASE_API_URL}${API.FILTER_PLACES}?filterPlaceId=${filterPlaceId}`, {
-          method: 'DELETE',
-        });
-        if(res.ok) {
-          toast.success(t('delete_filter_place_success'));
-          onDeleteSucess();
+    if (!confirmDelete) return;
+
+    const isWork = normalizeAddress(filter?.address) === normalizeAddress(WORK_ADDRESS);
+
+    // Local Work: just clear local flag, no API call
+    if (filter?.source === "local" && isWork) {
+      onWorkDeleted?.();
+      toast.success(t('delete_filter_place_success'));
+      return;
+    }
+
+    // Block deleting other local constants
+    if (filter?.source === "local") {
+      toast.error(t('cannot_delete_local_filter'));
+      return;
+    }
+
+    try {
+      const res = await fetch(`${import.meta.env.VITE_BASE_API_URL}${API.FILTER_PLACES}?filterPlaceId=${filter?.id}`, {
+        method: 'DELETE',
+      });
+      if (res.ok) {
+        toast.success(t('delete_filter_place_success'));
+        if (isWork) {
+          onWorkDeleted?.();
         }
-      } catch (error) {
-        console.error("Error deleting filter place:", error);
-        toast.error(error.message || "error deleting filter place");
-        navigate("/");
+        onDeleteSucess?.();
       }
-    } 
+    } catch (error) {
+      console.error("Error deleting filter place:", error);
+      toast.error(error.message || "error deleting filter place");
+      navigate("/");
+    }
   }
 
   return (
@@ -34,18 +55,25 @@ const FilterSidebar = ({ filters = [], onAddClick, selectedAddress, onSelectFilt
 
       <div className="space-y-3">
         {filters.map((item, index) => (
-          <div key={item.id || index} className="flex items-center justify-between group cursor-pointer" onClick={() => onSelectFilter(item.address)}>
+          <div key={item.id || index} className="flex items-center justify-between group cursor-pointer" onClick={() => onSelectFilter(item)}>
             <div className="flex items-center gap-2">
               <input 
                 type="radio" 
                 name='location_filter'
                 className="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" 
-                checked={selectedAddress === item.address}
-                onChange={() => onSelectFilter(item.address)}
+                checked={selectedFilter?.id === item.id}
+                onChange={() => onSelectFilter(item)}
               />
               <span className="text-gray-600 text-sm">{item.name}</span>
             </div>
-            <Trash2 onClick={() => handleDelete(item.id)} size={16} className="text-red-400 opacity-0 group-hover:opacity-100 transition cursor-pointer" />
+            <Trash2 
+              onClick={(e) => {
+                e.stopPropagation();
+                handleDelete(item);
+              }} 
+              size={16} 
+              className="text-red-400 opacity-0 group-hover:opacity-100 transition cursor-pointer" 
+            />
           </div>
         ))}
       </div>

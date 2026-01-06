@@ -1,14 +1,14 @@
 const navLinks = [
-    { path: '/map', label: 'map' },         
-    { path: '/list', label: 'suggest_list' },    
-    { path: '/settings', label: 'setting' },    
+  { path: "/map", label: "map" },
+  { path: "/list", label: "suggest_list" },
+  { path: "/settings", label: "setting" },
 ];
 
 const contactInfo = {
-    phone: "0123.456.789",
-    email: "contact@scheduler.com",
-    address: "Phường Bách Khoa, Hai Bà Trưng, Hà Nội"
-}
+  phone: "0123.456.789",
+  email: "contact@scheduler.com",
+  address: "Phường Bách Khoa, Hai Bà Trưng, Hà Nội",
+};
 
 const placeImages = [
   // --- GYM & FITNESS (Phòng tập thể hình, tạ, máy móc) ---
@@ -23,9 +23,9 @@ const placeImages = [
   "https://images.unsplash.com/photo-1593079831268-3381b0db4a77?auto=format&fit=crop&w=1000&q=80",
   "https://images.unsplash.com/photo-1623874514711-0f321325f318?auto=format&fit=crop&w=1000&q=80",
 
-  // --- SÂN BÓNG ĐÁ & SÂN VẬN ĐỘNG (Cỏ nhân tạo, sân cỏ, khung thành) --- 
-  "https://images.unsplash.com/photo-1556056504-5c7696c4c28d?auto=format&fit=crop&w=1000&q=80", 
-  "https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?auto=format&fit=crop&w=1000&q=80", 
+  // --- SÂN BÓNG ĐÁ & SÂN VẬN ĐỘNG (Cỏ nhân tạo, sân cỏ, khung thành) ---
+  "https://images.unsplash.com/photo-1556056504-5c7696c4c28d?auto=format&fit=crop&w=1000&q=80",
+  "https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?auto=format&fit=crop&w=1000&q=80",
   "https://images.unsplash.com/photo-1551958219-acbc608c6377?auto=format&fit=crop&w=1000&q=80",
   "https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=1000&q=80",
   "https://images.unsplash.com/photo-1564687978103-511228eb1816?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8cyVDMyVBMm4lMjBiJUMzJUIzbmclMjAlQzQlOTElQzMlQTF8ZW58MHx8MHx8fDA%3D",
@@ -85,22 +85,292 @@ const placeImages = [
 ];
 
 const activities = [
-    { label: "gym", trans: "Gym" },
-    { label: "yoga", trans: "Yoga" },
-    { label: "pilates", trans: "Pilates" },    
-    { label: "crossfit", trans: "CrossFit" }, 
-    { label: "boxing", trans: "Boxing" },     
-    { label: "running", trans: "Running" },
-    { label: "swimming", trans: "Swimming" },       
-    { label: "cycling", trans: "Cycling" },   
-    { label: "bouldering", trans: "Bouldering" }, 
-    { label: "golf", trans: "Golf" },          
-    { label: "badminton", trans: "Badminton" },
-    { label: "tennis", trans: "Tennis" },
-    { label: "table_tennis", trans: "Table Tennis" },     
-    { label: "basketball", trans: "Basketball" },     
-    { label: "soccer", trans: "Soccer" },       
-    { label: "volleyball", trans: "Volleyball" }
+  { label: "gym", trans: "Gym" },
+  { label: "yoga", trans: "Yoga" },
+  { label: "pilates", trans: "Pilates" },
+  { label: "crossfit", trans: "CrossFit" },
+  { label: "boxing", trans: "Boxing" },
+  { label: "running", trans: "Running" },
+  { label: "swimming", trans: "Swimming" },
+  { label: "cycling", trans: "Cycling" },
+  { label: "bouldering", trans: "Bouldering" },
+  { label: "golf", trans: "Golf" },
+  { label: "badminton", trans: "Badminton" },
+  { label: "tennis", trans: "Tennis" },
+  { label: "table_tennis", trans: "Table Tennis" },
+  { label: "basketball", trans: "Basketball" },
+  { label: "soccer", trans: "Soccer" },
+  { label: "volleyball", trans: "Volleyball" },
 ];
 
-export { navLinks, contactInfo, activities, placeImages };
+const filters = [
+  {
+    id: "1",
+    name: "Hồ Hoàn Kiếm",
+    address: "28 Trần Hưng Đạo, Hoàn Kiếm, Hà Nội",
+  },
+  { id: "2", name: "Xuân La", address: "28 Xuân La, Tây Hồ, Hà Nội" },
+  { id: "3", name: "Work", address: "số 1 Đại Cồ Việt, Hai Bà Trưng, Hà Nội" },
+];
+
+const filteredSpots = [
+  {
+    filterId: "1",
+    osmId: "",
+    name: "MBS Pilates",
+    address: "39A P. Ngô Quyền, Phan Chu Trinh, Hoàn Kiếm, Hà Nội, Việt Nam",
+    sports: ["Gym", "Pilates"],
+    distanceInMeters: 290,
+  },
+  {
+    filterId: "1",
+    osmId: "",
+    name: "Kinetic Gym and Wellness Studio",
+    address: "83A P. Lý Thường Kiệt, Cửa Nam, Hà Nội, Việt Nam",
+    sports: ["Gym"],
+    distanceInMeters: 1500,
+  },
+  {
+    filterId: "1",
+    osmId: "",
+    name: "Heart Fitness & Recover",
+    address: "72 P. Trần Quốc Toản, Trần Hưng Đạo, Hoàn Kiếm, Hà Nội, Việt Nam",
+    sports: ["Gym", "Yoga"],
+    distanceInMeters: 1300,
+  },
+  {
+    filterId: "1",
+    osmId: "",
+    name: "Curves Ngô Quyền",
+    address:
+      "39A P. Ngô Quyền, Phan Chu Trinh, Hoàn Kiếm, Hà Nội, Việt Nam",
+    sports: ["Fitness", "Gym", "Yoga"],
+    distanceInMeters: 290,
+  },
+  {
+    filterId: "1",
+    osmId: "",
+    name: "Leefit Private Gym",
+    address: "4 Phan Chu Trinh, Hoàn Kiếm, Hà Nội, Việt Nam",
+    sports: ["Gym", "Pilates"],
+    distanceInMeters: 450,
+  },
+  {
+    filterId: "1",
+    osmId: "",
+    name: "Gaia Pilates",
+    address:
+      "39 P. Lý Thường Kiệt, Hàng Bài, Hoàn Kiếm, Hà Nội, Việt Nam",
+    sports: ["Pilates", "Yoga"],
+    distanceInMeters: 650,
+  },
+  {
+    filterId: "1",
+    osmId: "",
+    name: "OLF.YOGA",
+    address:
+      "9A Ng. Phan Huy Chú, Phan Chu Trinh, Hoàn Kiếm, Hà Nội, Việt Nam",
+    sports: ["Yoga"],
+    distanceInMeters: 450,
+  },
+  {
+    filterId: "1",
+    osmId: "",
+    name: "Midas Hoàn Kiếm",
+    address:
+      "214B Đ. Trần Khánh Dư, Tràng Tiền, Hoàn Kiếm, Hà Nội, Việt Nam",
+    sports: ["Yoga", "Gym"],
+    distanceInMeters: 900,
+  },
+  {
+    filterId: "1",
+    osmId: "",
+    name: "Sân cầu lông HKsport",
+    address: "223 Hồng Hà, Phúc Tân, Hoàn Kiếm, Hà Nội, Việt Nam",
+    sports: ["Badminton"],
+    distanceInMeters: 2500,
+  },
+  {
+    filterId: "1",
+    osmId: "",
+    name: "Sân Cầu lông Bạch Đằng",
+    address: "44 Hàm Tử Quan, Chương Dương Độ, Hoàn Kiếm, Hà Nội, Việt Nam",
+    sports: ["Badminton", "Pickleball"],
+    distanceInMeters: 2100,
+  },
+  {
+    filterId: "2",
+    osmId: "",
+    name: "Emma Pilates ",
+    address:
+      "Embassy Garden, phường Xuân Tảo, quận Bắc Từ Liêm, Bắc Từ Liêm, Hà Nội, Việt Nam",
+    sports: ["Pilates", "Yoga"],
+    distanceInMeters: 1600,
+  },
+  {
+    filterId: "2",
+    osmId: "",
+    name: "Gym Healthy",
+    address:
+      "P. Lưu Cơ, Khu Ngoại giao đoàn, Bắc Từ Liêm, Hà Nội, Việt Nam",
+    sports: ["Gym"],
+    distanceInMeters: 1300,
+  },
+  {
+    filterId: "2",
+    osmId: "",
+    name: "AKC Fitness Quận Tây Hồ",
+    address: "101 Đ. Xuân La, Xuân La, Tây Hồ, Hà Nội, Việt Nam",
+    sports: ["Gym", "Fitness"],
+    distanceInMeters: 500,
+  },
+  {
+    filterId: "2",
+    osmId: "",
+    name: "AGOGE",
+    address: "101, Xuân La, Tây Hồ, Hà Nội 11200, Việt Nam",
+    sports: ["Boxing", "Gym"],
+    distanceInMeters: 100,
+  },
+  {
+    filterId: "2",
+    osmId: "",
+    name: "The Lion",
+    address: "515 Đ. Lạc Long Quân, Xuân La, Tây Hồ, Hà Nội, Việt Nam",
+    sports: ["Gym", "Fitness"],
+    distanceInMeters: 100,
+  },
+  {
+    filterId: "2",
+    osmId: "",
+    name: "Shree Yoga",
+    address: "55, Xuân La, Tây Hồ, Hà Nội, Việt Nam",
+    sports: ["Yoga", "Pilates"],
+    distanceInMeters: 300,
+  },
+  {
+    filterId: "2",
+    osmId: "",
+    name: "S'Fitness & Pool Kosmo",
+    address: "Kosmo, 161 Đ. Xuân La, Tây Hồ, Hà Nội, Việt Nam",
+    sports: ["Yoga", "Fitness", "Swimming"],
+    distanceInMeters: 900,
+  },
+  {
+    filterId: "2",
+    osmId: "",
+    name: "Nhà thi đấu Tây Hồ",
+    address: "101 Đ. Xuân La, Xuân La, Tây Hồ, Hà Nội, Việt Nam",
+    sports: ["Badminton", "Football", "Tennis", "Basketball"],
+    distanceInMeters: 500,
+  },
+  {
+    filterId: "2",
+    osmId: "",
+    name: "Sân VNPT",
+    address: "2QXX+Q94, Xuân La, Tây Hồ, Hà Nội, Việt Nam",
+    sports: ["Badminton", "Pickleball"],
+    distanceInMeters: 4000,
+  },
+  {
+    filterId: "2",
+    osmId: "",
+    name: "Sân cầu lông THPH Xuân Đỉnh",
+    address: "176 Đ. Xuân Đỉnh, Xuân Đỉnh, Bắc Từ Liêm, Hà Nội, Việt Nam",
+    sports: ["Badminton"],
+    distanceInMeters: 1900,
+  },
+  {
+    filterId: "3",
+    osmId: "",
+    name: "CLB Golden Gym Bách Khoa",
+    address: "A1 P. Lê Thanh Nghị, Bách Khoa, Hai Bà Trưng, Hà Nội, Việt Nam",
+    sports: ["Gym", "Fitness"],
+    distanceInMeters: 1000,
+  },
+  {
+    filterId: "3",
+    osmId: "",
+    name: "VNFA - Vietnam Fitness Academy",
+    address:
+      "70 Ng. 27 Đ. Đại Cồ Việt, Cầu Dền, Hai Bà Trưng, Hà Nội, Việt Nam",
+    sports: ["Gym", "Fitness"],
+    distanceInMeters: 400,
+  },
+  {
+    filterId: "3",
+    osmId: "",
+    name: "RISE Fitness & Yoga 01 Lương Yên",
+    address: "01 P. Lương Yên, Bạch Đằng, Hai Bà Trưng, Hà Nội, Việt Nam",
+    sports: ["Gym", "Yoga", "Fitness"],
+    distanceInMeters: 2000,
+  },
+  {
+    filterId: "3",
+    osmId: "",
+    name: "FourT Fitness",
+    address: "55 P. Lê Đại Hành, Lê Đại Hành, Hai Bà Trưng, Hà Nội, Việt Nam",
+    sports: ["Gym", "Fitness"],
+    distanceInMeters: 600,
+  },
+  {
+    filterId: "3",
+    osmId: "",
+    name: "Whey Gym",
+    address:
+      "Chung Cư L3 Ngõ Chợ, Nguyễn Công Trứ, Phố Huế, Hai Bà Trưng, Hà Nội, Việt Nam",
+    sports: ["Gym"],
+    distanceInMeters: 650,
+  },
+  {
+    filterId: "3",
+    osmId: "",
+    name: "King Fitness",
+    address: "114 P. Mai Hắc Đế, Lê Đại Hành, Hai Bà Trưng, Hà Nội, Việt Nam",
+    sports: ["Gym", "Fitness"],
+    distanceInMeters: 220,
+  },
+  {
+    filterId: "3",
+    osmId: "",
+    name: "Hương Anh Fitness & Yoga",
+    address: "149 P. Huế, Ngô Thì Nhậm, Hai Bà Trưng, Hà Nội, Việt Nam",
+    sports: ["Yoga", "Fitness"],
+    distanceInMeters: 650,
+  },
+  {
+    filterId: "3",
+    osmId: "",
+    name: "Sân Cầu Lông Tiến Dinh Sport",
+    address:
+      "Tòa B, 488 P. Minh Khai, Vĩnh Phú, Hai Bà Trưng, Hà Nội, Việt Nam",
+    sports: ["Badminton"],
+    distanceInMeters: 3000,
+  },
+  {
+    filterId: "3",
+    osmId: "",
+    name: "Sân Cầu Lông Đức Thảo",
+    address: "18 Đ. Tam Trinh, Mai Động, Hoàng Mai, Hà Nội, Việt Nam",
+    sports: ["Badminton", "Pickleball"],
+    distanceInMeters: 3000,
+  },
+  {
+    filterId: "3",
+    osmId: "",
+    name: "DINKZONE Pickleball & Badminton",
+    address:
+      "64 Ngõ 124 Phố Vĩnh Tuy, Vĩnh Phú, Hai Bà Trưng, Hà Nội, Việt Nam",
+    sports: ["Badminton", "Pickleball"],
+    distanceInMeters: 2500,
+  },
+];
+
+export {
+  navLinks,
+  contactInfo,
+  activities,
+  placeImages,
+  filters,
+  filteredSpots,
+};

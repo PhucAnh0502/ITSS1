@@ -7,7 +7,7 @@ const SpotCard = ({ spot }) => {
     const navigate = useNavigate();
     const {t} = useLang();
     const randomImageIndex = useMemo(() => {
-        const idStr = String(spot.osmId || 'default');
+        const idStr = String(spot.osmId || spot.id || 'default');
         let hash = 0;
         
         for (let i = 0; i < idStr.length; i++) {
@@ -18,7 +18,9 @@ const SpotCard = ({ spot }) => {
     }, [spot.osmId]);
 
     const handleDetailClick = () => {
-        navigate(`/list/${spot.osmId}`);
+        const type = spot.type || spot.osmType || 'node';
+        const id = spot.id || spot.osmId || spot.osmID || spot.name;
+        navigate(`/list/${encodeURIComponent(type)}/${encodeURIComponent(id)}`, { state: { existingData: spot } });
     }
     return (
         <div className="bg-gray-300/50 p-0 flex flex-col md:flex-row h-auto md:h-48 rounded shadow-sm overflow-hidden mb-4">

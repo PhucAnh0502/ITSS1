@@ -3,8 +3,9 @@ import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import toast from "react-hot-toast";
 import { API, API_BASE_URL } from "../lib/api";
-import { placeImages } from "../constants";
+import { placeImages, filteredSpots as constantFilteredSpots } from "../constants";
 import { useLang } from "../context/LanguageContext";
+import { calculateDistance, createLocalSpotId } from "../lib/utils";
 
 const PlaceDetail = () => {
   const { type, id } = useParams();
@@ -13,6 +14,8 @@ const PlaceDetail = () => {
   const [spotData, setSpotData] = useState(location.state?.existingData || null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [userLocation, setUserLocation] = useState(null);
+  const [calculatedDistance, setCalculatedDistance] = useState(null);
 
   const {t} = useLang();
 
@@ -20,10 +23,39 @@ const PlaceDetail = () => {
     return [...placeImages].sort(() => 0.5 - Math.random()).slice(0, 5);
   });
 
+  const [fallbackDistance] = useState(() => {
+    return (Math.random() * 10).toFixed(2);
+  });
+
   const imageUrls = useMemo(() => {
     if (spotData?.imageUrls?.length > 0) return spotData.imageUrls;
     return randomPlaceImages;
   }, [spotData, randomPlaceImages]);
+
+  useEffect(() => {
+    // Lấy vị trí hiện tại
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setUserLocation({ lat: latitude, lng: longitude });
+        },
+        (error) => {
+          console.error("Geolocation error:", error);
+        },
+        { enableHighAccuracy: true }
+      );
+    }
+  }, []);
+
+  useEffect(() => {
+    // Tính khoảng cách khi có cả vị trí người dùng và spotData
+    if (userLocation && spotData?.geometry?.location) {
+      const { lat, lng } = spotData.geometry.location;
+      const distance = calculateDistance(userLocation.lat, userLocation.lng, lat, lng);
+      setCalculatedDistance(distance);
+    }
+  }, [userLocation, spotData]);
 
   const fetchSpotDetail = async () => {
     try {
@@ -56,9 +88,24 @@ const PlaceDetail = () => {
   };
 
   useEffect(() => {
-    if(!spotData){
-        fetchSpotDetail();
+    if (spotData) return;
+
+    if (type === "local") {
+      const localSpot = constantFilteredSpots
+        .map((spot) => ({
+          ...spot,
+          id: createLocalSpotId(spot.filterId, spot.name),
+          type: "local",
+        }))
+        .find((spot) => spot.id === id);
+
+      if (localSpot) {
+        setSpotData(localSpot);
+        return;
+      }
     }
+
+    fetchSpotDetail();
   }, []);
 
   const nextImage = () => {
@@ -153,9 +200,11 @@ const PlaceDetail = () => {
               <div className="text-xs text-gray-600 space-y-1">
                 <p>
                   {t('from_work')}:{" "}
-                  {spotData?.distanceInMeters
-                    ? (spotData.distanceInMeters / 1000).toFixed(2)
-                    : 0}{" "}
+                  {calculatedDistance !== null
+                    ? calculatedDistance.toFixed(2)
+                    : (spotData?.distanceInMeters
+                        ? (spotData.distanceInMeters / 1000).toFixed(2)
+                        : fallbackDistance)}{" "}
                   km
                 </p>
               </div>
